@@ -68,7 +68,16 @@ features/
 └── ratings/
 ```
 
-Do not create unnecessary abstraction layers.
+Apply these placement rules as features are implemented:
+
+* `app/` defines routes, layouts, route handlers, and route-level composition. Keep reusable business rules out of route files.
+* `features/<feature>/` owns feature-specific components, server actions, validation, data access, and tests.
+* `components/` contains reusable, feature-neutral presentation components. Keep feature-specific UI with its feature.
+* `lib/` contains shared infrastructure and integrations, such as the Supabase clients and environment configuration.
+* `types/` contains generated database types and types genuinely shared by multiple features. Keep feature-local types with their feature.
+* Keep tests beside the code they cover and use the `@/` alias for imports rooted at `src/`.
+
+Create feature directories only when their implementation begins. Do not add placeholder files, speculative service or repository layers, broad barrel exports, or generic utility folders. Initialize shadcn/ui when the first shared UI components require it rather than generating unused files in advance.
 
 ---
 

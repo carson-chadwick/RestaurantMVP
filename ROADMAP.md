@@ -67,7 +67,7 @@ Create the basic application infrastructure.
 * [x] Configure authentication.
 * [x] Configure migrations.
 * [x] Configure hosting/deployment.
-* [ ] Establish basic application structure.
+* [x] Establish basic application structure.
 
 **Complete when:** The application runs locally and can be deployed successfully.
 
@@ -191,6 +191,6 @@ Consider only after testing the core product:
 
 ## Current Status
 
-**Phase:** 1 — Foundation
-**Status:** Application infrastructure, Supabase, migrations, and Vercel deployment configured
-**Next Goal:** Establish the basic application structure.
+**Phase:** 2 — Accounts & Roles
+**Status:** Phase 1 foundation complete
+**Next Goal:** Implement customer signup and login.

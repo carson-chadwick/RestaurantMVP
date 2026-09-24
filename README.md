@@ -3,10 +3,10 @@
 Dining Plus is a two-sided restaurant reputation platform. This repository
 contains the single Next.js application described in the project architecture.
 
-The application is currently in Phase 1 (Foundation). The web scaffold,
-development quality gates, hosted Supabase connection, authentication
-foundation, and database migration workflow are configured. Deployment
-is configured and verified on Vercel.
+Phase 1 (Foundation) is complete. The web scaffold, development quality gates,
+hosted Supabase connection, authentication foundation, migration workflow, and
+Vercel deployment are configured. Development now proceeds through Phase 2
+(Accounts & Roles).
 
 ## Prerequisites
 
@@ -217,10 +217,16 @@ hosted configuration change narrowly.
 ```text
 src/
 ├── app/          # Routes, layouts, and global styles
-├── components/   # Shared UI components
-├── features/     # Feature-specific application logic
-├── lib/          # Shared services and utilities
-└── types/        # Shared TypeScript types
+├── components/   # Reusable, feature-neutral UI
+├── features/     # Feature-owned UI, validation, actions, and data access
+├── lib/          # Shared infrastructure and integrations
+└── types/        # Generated or cross-feature TypeScript types
 ```
+
+Feature directories are created only when implementation begins, so a fresh
+checkout may not contain every empty directory shown above. Keep tests beside
+the code they cover and import from `src/` with the `@/` alias. See
+`docs/architecture.md` for the placement rules; avoid placeholder files and
+speculative abstraction layers.
 
 See `ROADMAP.md` for delivery status and `docs/architecture.md` for system design.
