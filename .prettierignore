@@ -1,0 +1,9 @@
+.next
+coverage
+node_modules
+package-lock.json
+AGENTS.md
+ROADMAP.md
+project-best-practices.md
+docs/
+supabase/.temp/
