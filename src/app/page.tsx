@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-16">
@@ -12,6 +14,20 @@ export default function Home() {
           A two-sided reputation platform helping restaurants and customers
           build better dining experiences together.
         </p>
+        <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link
+            href="/signup"
+            className="rounded-xl bg-stone-900 px-6 py-3 font-semibold text-white hover:bg-stone-700"
+          >
+            Create customer account
+          </Link>
+          <Link
+            href="/login"
+            className="rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-stone-800 hover:bg-stone-50"
+          >
+            Sign in
+          </Link>
+        </div>
       </section>
     </main>
   );

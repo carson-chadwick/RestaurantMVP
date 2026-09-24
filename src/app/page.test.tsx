@@ -13,5 +13,12 @@ describe("Home", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Dining Plus")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Create customer account" }),
+    ).toHaveAttribute("href", "/signup");
+    expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute(
+      "href",
+      "/login",
+    );
   });
 });

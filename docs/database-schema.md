@@ -6,7 +6,7 @@ This is the Phase 0 logical schema. Implement it through version-controlled Supa
 
 | Entity | Minimum fields and purpose |
 | --- | --- |
-| `customer_profiles` | `user_id` (PK, Auth user), display name, unique customer code, participation state. The code helps staff confirm a name search result. |
+| `customer_profiles` | `user_id` (PK, Auth user), first name, last name, and participation state. Authentication email remains owned by Supabase Auth and may be used by authorized staff to disambiguate matching names. |
 | `restaurants` | `id` (PK), owner Auth user ID, profile name and basic listing details. |
 | `restaurant_employees` | Restaurant ID and employee Auth user ID (composite unique key), invitation/active status. Individual accounts identify staff actions. |
 | `paid_visits` | `id` (PK), restaurant ID, customer user ID, recording staff user ID, recorded time. Represents staff's manual assertion of an outside payment; it stores no payment credentials or transaction data. |
@@ -23,8 +23,8 @@ This is the Phase 0 logical schema. Implement it through version-controlled Supa
 ## Constraints and Business Rules
 
 * Stars are integers from 1 through 5. Unique visit IDs in each rating table permit at most one rating per side per paid visit; a customer and restaurant may have multiple distinct visits.
-* Staff may create paid visits only for their own restaurant, after identifying the customer by name and submitting the code supplied by that customer for server verification. Customer search results must not reveal the code. The customer may create a restaurant rating only for their own recorded visit.
+* Staff may create paid visits only for their own restaurant after identifying the customer by first and last name. Authorized staff search may expose the Auth email address when needed to disambiguate matching names. The customer may create a restaurant rating only for their own recorded visit.
 * A customer rating requires a restaurant rating for the same visit and current customer participation. Staff may rate only visits at their restaurant. No separate confirmation record is needed.
 * The first restaurant rating enables customer participation and triggers the privacy notice. An explicit opt-out takes precedence over later restaurant ratings until the customer opts in again. Opt-out prevents new customer ratings and hides retained customer ratings and aggregates from restaurant staff.
-* RLS and trusted server logic must prevent public reads of customer ratings, visits, customer codes, and participation state. A customer may read their own aggregate; authorized restaurant staff may read an opted-in customer's aggregate and count, but not other restaurants' individual customer rating rows.
+* RLS and trusted server logic must prevent public reads of customer ratings, visits, customer profiles, Auth email addresses, and participation state. A customer may read their own aggregate; authorized restaurant staff may read an opted-in customer's aggregate and count, but not other restaurants' individual customer rating rows.
 * Do not assume email confirmation, restaurant claim approval, booking records, payment transactions, or external integrations in this schema.

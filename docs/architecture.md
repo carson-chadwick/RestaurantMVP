@@ -150,12 +150,12 @@ should be enforced in trusted server/database logic rather than only in the brow
 
 ### MVP visit and rating flow
 
-1. Authenticated restaurant staff search customers by name, enter the code provided by the customer, and record a paid visit in their restaurant after server-side code verification. Search results do not reveal customer codes. The record represents payment made outside Dining Plus; no payment or booking integration is involved.
+1. Authenticated restaurant staff search customers by first and last name and record a paid visit in their restaurant. Authorized search results may show full customer email addresses to disambiguate matching names. The record represents payment made outside Dining Plus; no payment or booking integration is involved.
 2. The customer sees the pending visit on their next in-app visit and may submit one restaurant rating. It contributes immediately to the public restaurant average and count. There is no separate staff confirmation.
 3. The first restaurant rating enables customer-rating participation and presents the privacy notice. An explicit opt-out remains effective until the customer opts in again.
 4. Authorized staff may rate the customer once for that visit only after the customer has rated the restaurant and while the customer participates. Customer aggregates and counts are computed from retained customer ratings and exposed only to the customer and authorized restaurant staff while participation permits it.
 
-Server-side operations must validate the visit-to-restaurant/customer relationships, staff membership, participation state, and 1–5 star values before writes. Rating submission and the participation transition must be atomic. Database uniqueness and check constraints provide a second integrity boundary. Details of the entities and constraints are in `docs/database-schema.md`.
+Server-side operations must validate the visit-to-restaurant/customer relationships, staff membership, participation state, and 1–5 star values before writes. Customer identity search and Auth email access must be limited to authenticated staff with an active restaurant relationship. Rating submission and the participation transition must be atomic. Database uniqueness and check constraints provide a second integrity boundary. Details of the entities and constraints are in `docs/database-schema.md`.
 
 ---
 

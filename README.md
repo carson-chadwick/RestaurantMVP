@@ -8,6 +8,11 @@ hosted Supabase connection, authentication foundation, migration workflow, and
 Vercel deployment are configured. Development now proceeds through Phase 2
 (Accounts & Roles).
 
+Customer signup and login are available at `/signup` and `/login`. A successful
+authentication opens the minimal customer home at `/customer`, where the user
+can confirm their account and sign out. Password recovery is deferred for the
+MVP.
+
 ## Prerequisites
 
 - Node.js 22

@@ -13,9 +13,17 @@ For each significant decision, record:
 
 ---
 
+## 2026-09-24 — Name-based customer lookup with email disambiguation
+
+* **Decision:** Customer signup stores separate first and last names. Restaurant staff will search by those names, and authenticated staff authorized for a restaurant may see full customer email addresses to disambiguate matching names. The previously planned customer code is removed.
+* **Context:** Restaurant workers should usually find a customer by name and need a unique identifier only when names are ambiguous.
+* **Rationale:** Name-first search keeps routine staff interactions simple, while the Auth email already provides a unique account identifier.
+* **Alternatives considered:** An app-generated customer code, always requiring email entry, masked email hints, and name-only selection.
+* **Consequences:** Staff lookup must strictly enforce restaurant authorization because it exposes customer login identifiers and personal information. Email remains owned by Supabase Auth rather than duplicated in `customer_profiles`.
+
 ## 2026-09-21 — Manual paid visits and in-app rating prompt
 
-* **Decision:** Restaurant staff identify a customer by name and customer code, then manually record a paid visit. The customer sees an in-app prompt and may rate the restaurant immediately. No separate staff visit confirmation is required.
+* **Decision:** Restaurant staff identify a customer by name, using email to disambiguate matching names when necessary, then manually record a paid visit. The customer sees an in-app prompt and may rate the restaurant immediately. No separate staff visit confirmation is required.
 * **Context:** Bookings and payments happen outside Dining Plus during the MVP.
 * **Rationale:** This supports the core rating flow without payment, POS, booking, or notification integrations.
 * **Alternatives considered:** Customer-entered payment, automated payment trigger, visit confirmation, email prompt.
