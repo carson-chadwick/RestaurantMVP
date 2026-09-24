@@ -44,15 +44,35 @@ export function LoginForm({
         pending={pending}
         pendingLabel="Signing in…"
       />
-      <p className="text-center text-sm text-stone-600">
-        New to Dining Plus?{" "}
-        <Link
-          href="/signup"
-          className="font-semibold text-amber-700 hover:text-amber-800"
-        >
-          Create an account
-        </Link>
-      </p>
+      <div className="space-y-2 text-center text-sm text-stone-600">
+        <p>
+          New customer?{" "}
+          <Link
+            href="/signup"
+            className="font-semibold text-amber-700 hover:text-amber-800"
+          >
+            Create a customer account
+          </Link>
+        </p>
+        <p>
+          Restaurant owner?{" "}
+          <Link
+            href="/restaurant/signup"
+            className="font-semibold text-amber-700 hover:text-amber-800"
+          >
+            Create a restaurant account
+          </Link>
+        </p>
+        <p>
+          Restaurant employee?{" "}
+          <Link
+            href="/employee/signup"
+            className="font-semibold text-amber-700 hover:text-amber-800"
+          >
+            Create an employee account
+          </Link>
+        </p>
+      </div>
     </form>
   );
 }

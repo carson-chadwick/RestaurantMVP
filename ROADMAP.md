@@ -78,11 +78,11 @@ Create the basic application infrastructure.
 Build the identity system.
 
 * [x] Customer signup/login.
-* [ ] Restaurant signup/login.
-* [ ] Restaurant employee access.
-* [ ] Protected routes.
-* [ ] Role and permission enforcement.
-* [ ] Basic profiles.
+* [x] Restaurant signup/login.
+* [x] Restaurant employee access.
+* [x] Protected routes.
+* [x] Role and permission enforcement.
+* [x] Basic profiles.
 
 **Complete when:** Each user type can authenticate and access only the appropriate areas.
 
@@ -92,7 +92,7 @@ Build the identity system.
 
 Build the basic restaurant experience.
 
-* [ ] Restaurant profiles.
+* [x] Restaurant profiles.
 * [ ] Restaurant listing/discovery.
 * [ ] Restaurant rating display.
 * [ ] Restaurant rating count.
@@ -191,6 +191,6 @@ Consider only after testing the core product:
 
 ## Current Status
 
-**Phase:** 2 — Accounts & Roles
-**Status:** Phase 1 foundation complete
-**Next Goal:** Implement restaurant signup and login.
+**Phase:** 3 — Restaurants
+**Status:** Phase 2 accounts and roles complete
+**Next Goal:** Implement restaurant profiles.

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { loginSchema, signupSchema } from "./validation";
+import {
+  loginSchema,
+  restaurantSignupSchema,
+  signupSchema,
+} from "./validation";
 
 describe("customer auth validation", () => {
   it("trims names and normalizes email during signup", () => {
@@ -49,5 +53,25 @@ describe("customer auth validation", () => {
         "Password is required.",
       ]);
     }
+  });
+
+  it("normalizes and validates a restaurant name", () => {
+    const valid = restaurantSignupSchema.parse({
+      firstName: " Grace ",
+      lastName: " Hopper ",
+      restaurantName: "  The Compiler Cafe  ",
+      email: "OWNER@EXAMPLE.COM",
+      password: "secret",
+      confirmPassword: "secret",
+    });
+
+    expect(valid.restaurantName).toBe("The Compiler Cafe");
+    expect(valid.email).toBe("owner@example.com");
+
+    const invalid = restaurantSignupSchema.safeParse({
+      ...valid,
+      restaurantName: "x",
+    });
+    expect(invalid.success).toBe(false);
   });
 });

@@ -1,18 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createClient, redirect, signInWithPassword, signOut, signUp } =
-  vi.hoisted(() => ({
-    createClient: vi.fn(),
-    redirect: vi.fn(),
-    signInWithPassword: vi.fn(),
-    signOut: vi.fn(),
-    signUp: vi.fn(),
-  }));
+const {
+  createClient,
+  getAccountDestination,
+  redirect,
+  signInWithPassword,
+  signOut,
+  signUp,
+} = vi.hoisted(() => ({
+  createClient: vi.fn(),
+  getAccountDestination: vi.fn(),
+  redirect: vi.fn(),
+  signInWithPassword: vi.fn(),
+  signOut: vi.fn(),
+  signUp: vi.fn(),
+}));
 
 vi.mock("@/lib/supabase/server", () => ({ createClient }));
 vi.mock("next/navigation", () => ({ redirect }));
+vi.mock("./role", () => ({ getAccountDestination }));
 
-import { login, logout, signup } from "./actions";
+import {
+  employeeSignup,
+  login,
+  logout,
+  restaurantSignup,
+  signup,
+} from "./actions";
 
 function formData(values: Record<string, string>) {
   const data = new FormData();
@@ -26,6 +40,7 @@ describe("customer auth actions", () => {
     createClient.mockResolvedValue({
       auth: { signInWithPassword, signOut, signUp },
     });
+    getAccountDestination.mockResolvedValue("/customer");
   });
 
   it("creates a customer with normalized auth metadata", async () => {
@@ -92,8 +107,69 @@ describe("customer auth actions", () => {
     expect(state.formError).not.toContain("already registered");
   });
 
+  it("creates a restaurant owner and restaurant atomically through metadata", async () => {
+    signUp.mockResolvedValue({ error: null });
+
+    await restaurantSignup(
+      {},
+      formData({
+        firstName: "Julia",
+        lastName: "Child",
+        restaurantName: "The French Table",
+        email: "owner@example.com",
+        password: "secret",
+        confirmPassword: "secret",
+      }),
+    );
+
+    expect(signUp).toHaveBeenCalledWith({
+      email: "owner@example.com",
+      password: "secret",
+      options: {
+        data: {
+          account_type: "restaurant_owner",
+          first_name: "Julia",
+          last_name: "Child",
+          restaurant_name: "The French Table",
+        },
+      },
+    });
+    expect(redirect).toHaveBeenCalledWith("/restaurant");
+  });
+
+  it("creates an unassigned employee account", async () => {
+    signUp.mockResolvedValue({ error: null });
+
+    await employeeSignup(
+      {},
+      formData({
+        firstName: "Alex",
+        lastName: "Server",
+        email: "employee@example.com",
+        password: "secret",
+        confirmPassword: "secret",
+      }),
+    );
+
+    expect(signUp).toHaveBeenCalledWith({
+      email: "employee@example.com",
+      password: "secret",
+      options: {
+        data: {
+          account_type: "restaurant_employee",
+          first_name: "Alex",
+          last_name: "Server",
+        },
+      },
+    });
+    expect(redirect).toHaveBeenCalledWith("/restaurant");
+  });
+
   it("signs in with normalized credentials", async () => {
-    signInWithPassword.mockResolvedValue({ error: null });
+    signInWithPassword.mockResolvedValue({
+      data: { user: { id: "customer-id" } },
+      error: null,
+    });
 
     await login(
       {},
@@ -105,6 +181,42 @@ describe("customer auth actions", () => {
       password: "secret",
     });
     expect(redirect).toHaveBeenCalledWith("/customer");
+  });
+
+  it("redirects restaurant staff based on their trusted role", async () => {
+    signInWithPassword.mockResolvedValue({
+      data: { user: { id: "owner-id" } },
+      error: null,
+    });
+    getAccountDestination.mockResolvedValue("/restaurant");
+
+    await login(
+      {},
+      formData({ email: "owner@example.com", password: "secret" }),
+    );
+
+    expect(getAccountDestination).toHaveBeenCalledWith(
+      expect.anything(),
+      "owner-id",
+    );
+    expect(redirect).toHaveBeenCalledWith("/restaurant");
+  });
+
+  it("clears a session whose account has no trusted role", async () => {
+    signInWithPassword.mockResolvedValue({
+      data: { user: { id: "unknown-id" } },
+      error: null,
+    });
+    getAccountDestination.mockResolvedValue(null);
+    signOut.mockResolvedValue({ error: null });
+
+    const state = await login(
+      {},
+      formData({ email: "unknown@example.com", password: "secret" }),
+    );
+
+    expect(signOut).toHaveBeenCalledOnce();
+    expect(state.formError).toMatch(/determine access/i);
   });
 
   it("returns a generic invalid-credentials error", async () => {

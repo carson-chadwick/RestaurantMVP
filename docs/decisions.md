@@ -13,6 +13,30 @@ For each significant decision, record:
 
 ---
 
+## 2026-09-27 — Minimal always-eligible restaurant profiles
+
+* **Decision:** Restaurant owners may manage a required name plus optional free-text address, phone, short description, and structured Monday-through-Sunday hours. Each day is closed or has one local opening/closing interval. Profiles have no draft or publication state, and customer rating summaries are derived rather than editable.
+* **Context:** Phase 3 needs owner-managed listing data before discovery and live rating aggregates are added.
+* **Rationale:** Optional core fields let owners build a useful profile gradually without introducing publishing workflow, address taxonomy, or complex scheduling infrastructure.
+* **Alternatives considered:** Required complete profiles, structured US or international addresses, cuisine fields, images, manual publishing, free-text hours, split shifts, and overnight hours.
+* **Consequences:** Future discovery treats every restaurant as eligible and omits missing details. Public access policies and routes are deferred to the discovery slice. Phase 4 will connect the existing empty rating-summary contract to submitted ratings.
+
+## 2026-09-26 — Centralized route guards and minimal editable profiles
+
+* **Decision:** Protected customer and restaurant route layouts use a shared trusted role guard. Cross-role requests redirect to the user's own portal. Customers and staff may edit their own names; owners may also edit their restaurant name. Email and roles remain read-only.
+* **Context:** Phase 2 needed consistent route behavior and safe basic profile editing without pulling public restaurant listing work into the account phase.
+* **Rationale:** Central guards remove inconsistent page checks, while server-action checks plus RLS and column privileges provide defense in depth.
+* **Alternatives considered:** Per-page guards only, forbidden pages, forced logout on cross-role access, editable email, and Phase 3 listing fields.
+* **Consequences:** Restaurant address, hours, cuisine, images, and public presentation remain Phase 3 work. Email changes require a future confirmation and reauthentication flow.
+
+## 2026-09-25 — Exclusive account roles and direct employee access
+
+* **Decision:** Customer, restaurant-owner, and restaurant-employee roles are exclusive. Owners and employees use dedicated signup paths and a shared role-aware login. One owner creates one restaurant; one employee may belong to one restaurant. An owner grants immediate access by entering an existing employee account's exact email and may revoke that access.
+* **Context:** The MVP has no email confirmation or notification delivery, so email invitation links would add an insecure or unavailable workflow.
+* **Rationale:** Existing-account matching and strict one-to-one constraints provide a small, testable employee access model with clear authorization boundaries.
+* **Alternatives considered:** Multiple roles per account, emailed or manually shared invitation links, reusable restaurant codes, employee acceptance, and multi-restaurant accounts.
+* **Consequences:** Employees must create an account before owners can add them. Removing membership returns an employee to an unassigned state without deleting their account.
+
 ## 2026-09-24 — Name-based customer lookup with email disambiguation
 
 * **Decision:** Customer signup stores separate first and last names. Restaurant staff will search by those names, and authenticated staff authorized for a restaurant may see full customer email addresses to disambiguate matching names. The previously planned customer code is removed.

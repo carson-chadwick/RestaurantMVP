@@ -14,7 +14,111 @@ export type Database = {
   };
   public: {
     Tables: {
+      account_roles: {
+        Row: {
+          created_at: string;
+          role: Database["public"]["Enums"]["account_role"];
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          role: Database["public"]["Enums"]["account_role"];
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          role?: Database["public"]["Enums"]["account_role"];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       customer_profiles: {
+        Row: {
+          created_at: string;
+          first_name: string;
+          last_name: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          first_name: string;
+          last_name: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          first_name?: string;
+          last_name?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      restaurant_employees: {
+        Row: {
+          created_at: string;
+          employee_user_id: string;
+          restaurant_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          employee_user_id: string;
+          restaurant_id: string;
+        };
+        Update: {
+          created_at?: string;
+          employee_user_id?: string;
+          restaurant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_employees_restaurant_id_fkey";
+            columns: ["restaurant_id"];
+            isOneToOne: false;
+            referencedRelation: "restaurants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      restaurants: {
+        Row: {
+          address: string | null;
+          created_at: string;
+          description: string | null;
+          id: string;
+          name: string;
+          owner_user_id: string;
+          phone: string | null;
+          updated_at: string;
+          weekly_hours: Json | null;
+        };
+        Insert: {
+          address?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          owner_user_id: string;
+          phone?: string | null;
+          updated_at?: string;
+          weekly_hours?: Json | null;
+        };
+        Update: {
+          address?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          owner_user_id?: string;
+          phone?: string | null;
+          updated_at?: string;
+          weekly_hours?: Json | null;
+        };
+        Relationships: [];
+      };
+      staff_profiles: {
         Row: {
           created_at: string;
           first_name: string;
@@ -43,10 +147,34 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      can_access_restaurant: {
+        Args: { target_restaurant_id: string };
+        Returns: boolean;
+      };
+      can_manage_employee: {
+        Args: { target_user_id: string };
+        Returns: boolean;
+      };
+      grant_restaurant_employee_access: {
+        Args: { employee_email: string };
+        Returns: undefined;
+      };
+      list_restaurant_employees: {
+        Args: never;
+        Returns: {
+          email: string;
+          first_name: string;
+          last_name: string;
+          user_id: string;
+        }[];
+      };
+      revoke_restaurant_employee_access: {
+        Args: { target_employee_id: string };
+        Returns: undefined;
+      };
     };
     Enums: {
-      [_ in never]: never;
+      account_role: "customer" | "restaurant_owner" | "restaurant_employee";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -173,6 +301,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_role: ["customer", "restaurant_owner", "restaurant_employee"],
+    },
   },
 } as const;

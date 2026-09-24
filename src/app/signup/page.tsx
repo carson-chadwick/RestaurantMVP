@@ -1,16 +1,9 @@
-import { redirect } from "next/navigation";
-
 import { AuthShell } from "@/features/auth/auth-shell";
+import { redirectAuthenticatedAccount } from "@/features/auth/guards";
 import { SignupForm } from "@/features/auth/signup-form";
-import { createClient } from "@/lib/supabase/server";
 
 export default async function SignupPage() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-
-  if (data.user) {
-    redirect("/customer");
-  }
+  await redirectAuthenticatedAccount();
 
   return (
     <AuthShell

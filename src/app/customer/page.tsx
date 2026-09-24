@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { logout } from "@/features/auth/actions";
 import { createClient } from "@/lib/supabase/server";
@@ -33,14 +33,22 @@ export default async function CustomerPage() {
           >
             Dining Plus
           </Link>
-          <form action={logout}>
-            <button
-              type="submit"
+          <div className="flex items-center gap-3">
+            <Link
+              href="/customer/profile"
               className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
             >
-              Sign out
-            </button>
-          </form>
+              Profile
+            </Link>
+            <form action={logout}>
+              <button
+                type="submit"
+                className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
         </header>
         <section className="py-16">
           <p className="text-sm font-semibold text-amber-700">Customer home</p>

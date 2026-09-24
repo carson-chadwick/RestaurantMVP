@@ -119,7 +119,7 @@ Do not implement a custom authentication system.
 
 Authorization must be enforced server-side and, where appropriate, through Supabase Row Level Security (RLS).
 
-The primary roles are:
+The mutually exclusive MVP account roles are:
 
 * Customer
 * Restaurant
@@ -129,7 +129,13 @@ Never rely solely on hiding UI elements to enforce permissions.
 
 Customer reputation information must not be publicly accessible.
 
-Restaurant creation is self-service and email confirmation is deferred for the MVP. A restaurant creator may manage only their own restaurant and its employee invitations. Every staff action must resolve an active membership or ownership for the target restaurant. Customer profile, visit, participation, and rating access must be checked in trusted server logic and backed by RLS where appropriate. Public restaurant rating aggregates must not expose customer identities.
+Restaurant creation is self-service and email confirmation is deferred for the MVP. One owner account creates and manages one restaurant. Employees create dedicated accounts before an owner grants immediate access by exact email; each employee may belong to one restaurant, and the owner may revoke that membership. Every staff action must resolve ownership or active membership for the target restaurant. Customer profile, visit, participation, and rating access must be checked in trusted server logic and backed by RLS where appropriate. Public restaurant rating aggregates must not expose customer identities.
+
+Protected route layouts use a shared server-side account guard that verifies the Supabase user and resolves the trusted role from `account_roles`. Unauthenticated users go to login; authenticated users who open another role's portal are redirected to their canonical portal without losing their session. Server actions repeat the required role check near each mutation, and RLS, trusted database functions, column grants, and constraints remain the final authorization boundary.
+
+Phase 2 basic profiles allow users to update their own first and last name. Restaurant owners may also update their own restaurant's name. Emails and account roles are read-only, employees cannot edit restaurant data, and public listing details are deferred to Phase 3.
+
+Phase 3 restaurant profiles add optional address, phone, description, and structured weekly hours. Restaurant-specific validation, actions, types, and UI live in `features/restaurants`; the generic profiles feature remains responsible only for personal customer and staff information. Owners may update listing fields, employees have read-only access through their restaurant membership, and public database access remains deferred until discovery routes are implemented. Rating summaries use an average/count contract with an empty state until restaurant ratings are added.
 
 ---
 

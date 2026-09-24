@@ -3,9 +3,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { LoginForm } from "./login-form";
 import { SignupForm } from "./signup-form";
+import { StaffSignupForm } from "./staff-signup-form";
 
 vi.mock("./actions", () => ({
   login: vi.fn(),
+  employeeSignup: vi.fn(),
+  restaurantSignup: vi.fn(),
   signup: vi.fn(),
 }));
 
@@ -22,8 +25,14 @@ describe("customer auth forms", () => {
     );
     expect(screen.getByRole("button", { name: "Sign in" })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Create an account" }),
+      screen.getByRole("link", { name: "Create a customer account" }),
     ).toHaveAttribute("href", "/signup");
+    expect(
+      screen.getByRole("link", { name: "Create a restaurant account" }),
+    ).toHaveAttribute("href", "/restaurant/signup");
+    expect(
+      screen.getByRole("link", { name: "Create an employee account" }),
+    ).toHaveAttribute("href", "/employee/signup");
   });
 
   it("renders all required signup fields and a login link", () => {
@@ -44,5 +53,22 @@ describe("customer auth forms", () => {
       "href",
       "/login",
     );
+  });
+
+  it("collects a restaurant name only for owner signup", () => {
+    const { unmount } = render(<StaffSignupForm accountType="owner" />);
+
+    expect(screen.getByLabelText("Restaurant name")).toBeRequired();
+    expect(
+      screen.getByRole("button", { name: "Create restaurant account" }),
+    ).toBeInTheDocument();
+
+    unmount();
+    render(<StaffSignupForm accountType="employee" />);
+
+    expect(screen.queryByLabelText("Restaurant name")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Create employee account" }),
+    ).toBeInTheDocument();
   });
 });

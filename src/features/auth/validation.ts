@@ -31,9 +31,24 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
+export const restaurantSignupSchema = signupSchema.safeExtend({
+  restaurantName: z
+    .string()
+    .trim()
+    .min(2, "Restaurant name must be at least 2 characters.")
+    .max(100, "Restaurant name must be 100 characters or fewer."),
+});
+
+export const employeeSignupSchema = signupSchema;
+
 export type AuthFieldErrors = Partial<
   Record<
-    "firstName" | "lastName" | "email" | "password" | "confirmPassword",
+    | "firstName"
+    | "lastName"
+    | "restaurantName"
+    | "email"
+    | "password"
+    | "confirmPassword",
     string[]
   >
 >;

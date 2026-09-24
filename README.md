@@ -13,6 +13,19 @@ authentication opens the minimal customer home at `/customer`, where the user
 can confirm their account and sign out. Password recovery is deferred for the
 MVP.
 
+Restaurant owners create a dedicated account at `/restaurant/signup`, and
+employees create theirs at `/employee/signup`. All account types use `/login`;
+the trusted account role routes restaurant staff to `/restaurant`. Owners can
+grant or revoke access for existing employee accounts by exact email. MVP roles
+are exclusive, and each owner or employee is limited to one restaurant.
+
+Authenticated customer and restaurant areas are protected by trusted database
+role checks. Users who open the other role's portal are redirected to their own
+without being signed out. Customers manage their name at `/customer/profile`;
+owners and employees manage their personal name at `/restaurant/profile`, where
+owners may also update the restaurant name. Email and account roles are
+read-only for the MVP.
+
 ## Prerequisites
 
 - Node.js 22

@@ -22,6 +22,12 @@ export default function Home() {
             Create customer account
           </Link>
           <Link
+            href="/restaurant/signup"
+            className="rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-stone-800 hover:bg-stone-50"
+          >
+            Create restaurant account
+          </Link>
+          <Link
             href="/login"
             className="rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-stone-800 hover:bg-stone-50"
           >

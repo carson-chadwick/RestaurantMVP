@@ -20,5 +20,8 @@ describe("Home", () => {
       "href",
       "/login",
     );
+    expect(
+      screen.getByRole("link", { name: "Create restaurant account" }),
+    ).toHaveAttribute("href", "/restaurant/signup");
   });
 });
