@@ -182,6 +182,8 @@ Local Development
 
 Environment-specific secrets and credentials must be stored in environment variables and never committed to source control.
 
+For the initial MVP, Vercel deploys only the `main` branch to its generated production domain. Preview deployments are disabled. Local development and production temporarily use the same hosted Supabase project to minimize infrastructure; this means development operations can affect production data. Migrations must be reviewed before application, linked resets are prohibited once real data exists, and production must move to a separate Supabase project before the shared environment becomes unsafe.
+
 ---
 
 ## Testing

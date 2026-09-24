@@ -6,7 +6,7 @@ contains the single Next.js application described in the project architecture.
 The application is currently in Phase 1 (Foundation). The web scaffold,
 development quality gates, hosted Supabase connection, authentication
 foundation, and database migration workflow are configured. Deployment
-configuration is intentionally not configured yet.
+configuration is prepared and awaits live Vercel verification.
 
 ## Prerequisites
 
@@ -145,12 +145,15 @@ identity claims before passing requests to the application. It does not grant
 roles, protect routes, or replace authorization checks near sensitive data.
 Those behaviors are implemented with the account and role features in Phase 2.
 
-For the hosted development project, use these Auth settings:
+For the hosted Supabase project, use these Auth settings:
 
 - **Authentication → Providers → Email**: enable Email and email signup, and
   retain the default password policy.
-- **Authentication → URL Configuration**: set the Site URL to
-  `http://localhost:3000` and add `http://localhost:3000/**` as a redirect URL.
+- **Authentication → URL Configuration**: before production deployment, use
+  `http://localhost:3000` as the Site URL and allow
+  `http://localhost:3000/**` as a redirect URL. After deployment, replace the
+  Site URL with the exact production `https://<project>.vercel.app` URL while
+  retaining the localhost redirect URL.
 - Leave phone, social providers, anonymous sign-ins, and manual account linking
   disabled.
 
@@ -159,8 +162,53 @@ not need to follow an email confirmation link for the MVP. The current Dashboard
 may not expose this control; compare the linked project with `npx supabase config
 diff` rather than broadly pushing the generated local configuration.
 
-Production and preview redirect URLs will be added during hosting configuration.
-Do not add a service-role key to the application environment.
+Preview deployments are disabled, so do not add a broad Vercel wildcard to the
+redirect allowlist. Do not add a service-role key to the application
+environment.
+
+## Production deployment
+
+Dining Plus deploys to Vercel from the GitHub repository. The `main` branch is
+the only branch permitted to trigger a deployment; branch preview deployments
+are intentionally disabled in `vercel.json`.
+
+Import `carson-chadwick/RestaurantMVP` in Vercel with these settings:
+
+- Project name: `dining-plus`, if available.
+- Framework preset: Next.js.
+- Root directory: repository root.
+- Production branch: `main`.
+- Node.js version: 22.x.
+- Install, build, and output settings: Vercel defaults.
+
+In the Vercel project's **Production** environment only, add the two values from
+the Supabase Dashboard's Connect/API panel:
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+```
+
+Do not add a service-role key, database password, or CLI token. Deploy the
+project, then set Supabase Auth's Site URL to the exact generated production URL
+as described above. Verify that the root page returns HTTP 200, displays Dining
+Plus, and produces no build or runtime errors in Vercel.
+
+Every future push to `main` deploys directly to production. Run `npm run ci`
+before pushing. To recover from a bad release, use Vercel's deployment history
+to roll back to the last verified production deployment, then fix the source on
+`main`; do not patch generated deployment files.
+
+Local development and production currently share one Supabase project. Once
+real users exist, local operations can affect production data: apply only
+reviewed migrations, do not run linked database resets, and avoid creating or
+deleting test data that could be mistaken for real data. Move production to a
+separate Supabase project before this shared setup becomes unsafe.
+
+The committed `supabase/config.toml` remains localhost-oriented for CLI tooling
+and intentionally differs from the hosted Auth URL settings. Do not broadly run
+`supabase config push` against the shared project; review and apply any future
+hosted configuration change narrowly.
 
 ## Project structure
 

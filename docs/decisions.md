@@ -36,3 +36,11 @@ For each significant decision, record:
 * **Rationale:** Avoids a manual approval workflow and email-confirmation setup during Phase 1.
 * **Alternatives considered:** Administrator claim approval, domain proof, email-confirmed signup, shared staff login.
 * **Consequences:** Restaurant claims are not verified. Authentication, ownership, membership, and access controls are still required so one account cannot access another restaurant's private data.
+
+## 2026-09-24 — Single production deployment and shared Supabase project
+
+* **Decision:** Deploy only the `main` branch to a generated Vercel production domain. Disable preview deployments and temporarily use the existing hosted Supabase project for both local development and production.
+* **Context:** The MVP needs a deployable environment with minimal infrastructure and no custom domain yet.
+* **Rationale:** Vercel's Git integration and one Supabase project provide the smallest workable deployment setup.
+* **Alternatives considered:** Vercel preview deployments, a custom domain, and separate development and production Supabase projects.
+* **Consequences:** Every push to `main` can affect production immediately, and local database or Auth activity shares production state. Changes require local CI and reviewed migrations; linked resets are prohibited once real data exists. A separate production Supabase project is required when real usage makes sharing unsafe.
