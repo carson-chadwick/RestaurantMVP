@@ -6,7 +6,7 @@ contains the single Next.js application described in the project architecture.
 The application is currently in Phase 1 (Foundation). The web scaffold,
 development quality gates, hosted Supabase connection, authentication
 foundation, and database migration workflow are configured. Deployment
-configuration is prepared and awaits live Vercel verification.
+is configured and verified on Vercel.
 
 ## Prerequisites
 
@@ -171,6 +171,8 @@ environment.
 Dining Plus deploys to Vercel from the GitHub repository. The `main` branch is
 the only branch permitted to trigger a deployment; branch preview deployments
 are intentionally disabled in `vercel.json`.
+
+Production URL: [https://dining-plus.vercel.app](https://dining-plus.vercel.app)
 
 Import `carson-chadwick/RestaurantMVP` in Vercel with these settings:
 
