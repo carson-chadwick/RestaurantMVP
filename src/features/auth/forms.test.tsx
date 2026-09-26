@@ -47,6 +47,12 @@ describe("customer auth forms", () => {
     );
     expect(screen.getByLabelText("Confirm password")).toBeRequired();
     expect(
+      screen.getByLabelText(/authorized restaurant staff may use my name/i),
+    ).toBeRequired();
+    expect(
+      screen.getByRole("link", { name: "privacy policy" }),
+    ).toHaveAttribute("href", "/privacy");
+    expect(
       screen.getByRole("button", { name: "Create account" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute(

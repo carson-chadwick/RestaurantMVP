@@ -17,14 +17,29 @@ export function RatingSummaryDisplay({
   averageRating,
   ratingCount,
 }: Readonly<RestaurantProfile["ratingSummary"]>) {
+  const filledStars = averageRating === null ? 0 : Math.round(averageRating);
+  const ratingLabel =
+    averageRating === null
+      ? "No customer ratings yet"
+      : `Rated ${averageRating.toFixed(1)} out of 5`;
+
   return (
-    <div aria-label="Customer rating">
-      <p className="text-sm font-medium text-stone-500">Customer rating</p>
-      <p className="mt-1 font-semibold text-stone-900">
-        {averageRating === null
-          ? "No ratings yet"
-          : `${averageRating.toFixed(1)} out of 5`}
-      </p>
+    <div aria-label={ratingLabel}>
+      <div className="flex gap-0.5 text-lg" aria-hidden="true">
+        {Array.from({ length: 5 }, (_, index) => (
+          <span
+            key={index}
+            className={
+              index < filledStars ? "text-amber-500" : "text-stone-300"
+            }
+          >
+            {index < filledStars ? "★" : "☆"}
+          </span>
+        ))}
+      </div>
+      {averageRating === null ? (
+        <p className="mt-1 font-semibold text-stone-900">No ratings yet</p>
+      ) : null}
       <p className="text-sm text-stone-500">
         {ratingCount} {ratingCount === 1 ? "rating" : "ratings"}
       </p>
@@ -39,7 +54,16 @@ export function RestaurantDetails({
     <div className="space-y-5">
       <RatingSummaryDisplay {...profile.ratingSummary} />
       {profile.address ? <p>{profile.address}</p> : null}
-      {profile.phone ? <p>{profile.phone}</p> : null}
+      {profile.phone ? (
+        <p>
+          <a
+            className="font-medium text-amber-700 hover:underline"
+            href={`tel:${profile.phone}`}
+          >
+            {profile.phone}
+          </a>
+        </p>
+      ) : null}
       {profile.description ? (
         <p className="leading-7 text-stone-600">{profile.description}</p>
       ) : null}

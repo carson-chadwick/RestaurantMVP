@@ -18,7 +18,7 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required."),
 });
 
-export const signupSchema = z
+const baseSignupSchema = z
   .object({
     firstName: nameSchema("First name"),
     lastName: nameSchema("Last name"),
@@ -31,7 +31,13 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
-export const restaurantSignupSchema = signupSchema.safeExtend({
+export const signupSchema = baseSignupSchema.safeExtend({
+  privacyAcknowledged: z.literal(true, {
+    error: "You must acknowledge the privacy notice to create an account.",
+  }),
+});
+
+export const restaurantSignupSchema = baseSignupSchema.safeExtend({
   restaurantName: z
     .string()
     .trim()
@@ -39,7 +45,7 @@ export const restaurantSignupSchema = signupSchema.safeExtend({
     .max(100, "Restaurant name must be 100 characters or fewer."),
 });
 
-export const employeeSignupSchema = signupSchema;
+export const employeeSignupSchema = baseSignupSchema;
 
 export type AuthFieldErrors = Partial<
   Record<
@@ -48,7 +54,8 @@ export type AuthFieldErrors = Partial<
     | "restaurantName"
     | "email"
     | "password"
-    | "confirmPassword",
+    | "confirmPassword"
+    | "privacyAcknowledged",
     string[]
   >
 >;

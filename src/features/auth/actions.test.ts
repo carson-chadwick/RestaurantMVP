@@ -54,6 +54,7 @@ describe("customer auth actions", () => {
         email: " ADA@EXAMPLE.COM ",
         password: "secret",
         confirmPassword: "secret",
+        privacyAcknowledged: "on",
       }),
     );
 
@@ -64,6 +65,7 @@ describe("customer auth actions", () => {
         data: {
           account_type: "customer",
           first_name: "Ada",
+          identity_disclosure_acknowledged: true,
           last_name: "Lovelace",
         },
       },
@@ -98,6 +100,7 @@ describe("customer auth actions", () => {
         email: "ada@example.com",
         password: "secret",
         confirmPassword: "secret",
+        privacyAcknowledged: "on",
       }),
     );
 

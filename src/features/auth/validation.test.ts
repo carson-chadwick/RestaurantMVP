@@ -14,6 +14,7 @@ describe("customer auth validation", () => {
       email: "  ADA@EXAMPLE.COM ",
       password: "secret",
       confirmPassword: "secret",
+      privacyAcknowledged: true,
     });
 
     expect(result).toMatchObject({
@@ -30,6 +31,7 @@ describe("customer auth validation", () => {
       email: "not-an-email",
       password: "short",
       confirmPassword: "different",
+      privacyAcknowledged: true,
     });
 
     expect(result.success).toBe(false);
@@ -41,6 +43,23 @@ describe("customer auth validation", () => {
         password: ["Password must be at least 6 characters."],
         confirmPassword: ["Passwords do not match."],
       });
+    }
+  });
+
+  it("requires the customer privacy acknowledgement", () => {
+    const result = signupSchema.safeParse({
+      firstName: "Ada",
+      lastName: "Lovelace",
+      email: "ada@example.com",
+      password: "secret",
+      confirmPassword: "secret",
+      privacyAcknowledged: false,
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.flatten().fieldErrors.privacyAcknowledged).toEqual([
+        "You must acknowledge the privacy notice to create an account.",
+      ]);
     }
   });
 

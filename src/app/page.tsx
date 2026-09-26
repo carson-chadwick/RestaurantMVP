@@ -16,6 +16,12 @@ export default function Home() {
         </p>
         <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
+            href="/restaurants"
+            className="rounded-xl bg-amber-700 px-6 py-3 font-semibold text-white hover:bg-amber-800"
+          >
+            Browse restaurants
+          </Link>
+          <Link
             href="/signup"
             className="rounded-xl bg-stone-900 px-6 py-3 font-semibold text-white hover:bg-stone-700"
           >

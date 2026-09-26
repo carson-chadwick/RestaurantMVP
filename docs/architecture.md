@@ -129,13 +129,15 @@ Never rely solely on hiding UI elements to enforce permissions.
 
 Customer reputation information must not be publicly accessible.
 
-Restaurant creation is self-service and email confirmation is deferred for the MVP. One owner account creates and manages one restaurant. Employees create dedicated accounts before an owner grants immediate access by exact email; each employee may belong to one restaurant, and the owner may revoke that membership. Every staff action must resolve ownership or active membership for the target restaurant. Customer profile, visit, participation, and rating access must be checked in trusted server logic and backed by RLS where appropriate. Public restaurant rating aggregates must not expose customer identities.
+Restaurant creation is self-service and email confirmation is deferred for the MVP. One owner account creates and manages one restaurant. Employees create dedicated accounts before an owner grants immediate access by exact email; each employee may belong to one restaurant, and the owner may revoke that membership. Every staff action must resolve ownership or active membership for the target restaurant. Customer identity, visit, and rating access must be checked in trusted server logic and backed by RLS where appropriate. Public restaurant rating aggregates must not expose customer identities.
 
 Protected route layouts use a shared server-side account guard that verifies the Supabase user and resolves the trusted role from `account_roles`. Unauthenticated users go to login; authenticated users who open another role's portal are redirected to their canonical portal without losing their session. Server actions repeat the required role check near each mutation, and RLS, trusted database functions, column grants, and constraints remain the final authorization boundary.
 
 Phase 2 basic profiles allow users to update their own first and last name. Restaurant owners may also update their own restaurant's name. Emails and account roles are read-only, employees cannot edit restaurant data, and public listing details are deferred to Phase 3.
 
 Phase 3 restaurant profiles add optional address, phone, description, and structured weekly hours. Restaurant-specific validation, actions, types, and UI live in `features/restaurants`; the generic profiles feature remains responsible only for personal customer and staff information. Owners may update listing fields, employees have read-only access through their restaurant membership, and public database access remains deferred until discovery routes are implemented. Rating summaries use an average/count contract with an empty state until restaurant ratings are added.
+
+Public restaurant discovery uses narrowly scoped, read-only PostgreSQL functions callable by anonymous and authenticated users. These functions return only safe listing fields and rating aggregates, never ownership, staff, or account data. `/restaurants` provides server-rendered name search and pagination, while `/restaurants/[restaurantId]` provides the public profile. Phase 3 returns a null average and zero count; Phase 4 will preserve the function and TypeScript contracts while deriving live values from restaurant ratings.
 
 ---
 
@@ -148,7 +150,7 @@ UI components should primarily handle presentation and user interaction.
 Important business rules such as:
 
 * Rating eligibility
-* Customer participation
+* Customer identity privacy
 * Rating calculations
 * Restaurant employee permissions
 
@@ -156,12 +158,12 @@ should be enforced in trusted server/database logic rather than only in the brow
 
 ### MVP visit and rating flow
 
-1. Authenticated restaurant staff search customers by first and last name and record a paid visit in their restaurant. Authorized search results may show full customer email addresses to disambiguate matching names. The record represents payment made outside Dining Plus; no payment or booking integration is involved.
+1. Authenticated restaurant staff browse recent acknowledged customers or search an exact first and last name, then record a paid visit in their restaurant. The protected workflow shows customer email addresses. The record represents payment made outside Dining Plus; no payment or booking integration is involved.
 2. The customer sees the pending visit on their next in-app visit and may submit one restaurant rating. It contributes immediately to the public restaurant average and count. There is no separate staff confirmation.
-3. The first restaurant rating enables customer-rating participation and presents the privacy notice. An explicit opt-out remains effective until the customer opts in again.
-4. Authorized staff may rate the customer once for that visit only after the customer has rated the restaurant and while the customer participates. Customer aggregates and counts are computed from retained customer ratings and exposed only to the customer and authorized restaurant staff while participation permits it.
+3. Customer signup acknowledgement authorizes the protected identity-sharing and two-sided-rating workflow for the MVP.
+4. Authorized staff may rate the customer once for that visit only after the customer has rated the restaurant. Customer aggregates and counts are exposed only to the customer and authorized staff inside the visit workflow. Individual received ratings are visible only to that customer and omit the submitting staff identity.
 
-Server-side operations must validate the visit-to-restaurant/customer relationships, staff membership, participation state, and 1–5 star values before writes. Customer identity search and Auth email access must be limited to authenticated staff with an active restaurant relationship. Rating submission and the participation transition must be atomic. Database uniqueness and check constraints provide a second integrity boundary. Details of the entities and constraints are in `docs/database-schema.md`.
+Server-side operations validate visit-to-restaurant/customer relationships, staff membership, signup acknowledgement, and 1–5 star values before writes. Customer browsing, exact-name search, and Auth email access are limited to authenticated staff with an active restaurant relationship. Database uniqueness and check constraints provide a second integrity boundary. Details of the entities and constraints are in `docs/database-schema.md`.
 
 ---
 
@@ -211,7 +213,6 @@ Prioritize tests for:
 * Authorization
 * Rating creation
 * Rating calculations
-* Customer opt-in/opt-out
 * Privacy boundaries
 
 Use lightweight unit/integration testing during development and end-to-end testing for critical user flows.

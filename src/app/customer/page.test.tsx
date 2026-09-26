@@ -1,8 +1,16 @@
-import { render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createClient, redirect, signOut } = vi.hoisted(() => ({
+const {
+  createClient,
+  loadCustomerReputation,
+  loadCustomerVisits,
+  redirect,
+  signOut,
+} = vi.hoisted(() => ({
   createClient: vi.fn(),
+  loadCustomerReputation: vi.fn(),
+  loadCustomerVisits: vi.fn(),
   redirect: vi.fn((path: string) => {
     throw new Error(`redirect:${path}`);
   }),
@@ -11,6 +19,15 @@ const { createClient, redirect, signOut } = vi.hoisted(() => ({
 
 vi.mock("@/lib/supabase/server", () => ({ createClient }));
 vi.mock("next/navigation", () => ({ redirect }));
+vi.mock("@/features/visits/data", () => ({
+  loadCustomerReputation,
+  loadCustomerVisits,
+}));
+vi.mock("@/features/visits/actions", () => ({
+  recordPaidVisit: vi.fn(),
+  submitCustomerRating: vi.fn(),
+  submitRestaurantRating: vi.fn(),
+}));
 
 import CustomerPage from "./page";
 
@@ -43,6 +60,65 @@ function customerClient({
 describe("customer home", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    loadCustomerVisits.mockResolvedValue([]);
+    loadCustomerReputation.mockResolvedValue({
+      summary: { averageRating: null, ratingCount: 0 },
+      history: [],
+    });
+  });
+
+  it("shows the customer's private aggregate and individual history", async () => {
+    createClient.mockResolvedValue(customerClient());
+    loadCustomerReputation.mockResolvedValue({
+      summary: { averageRating: 4.3, ratingCount: 7 },
+      history: [
+        {
+          visitId: "visit-id",
+          restaurantId: "restaurant-id",
+          restaurantName: "The Table",
+          recordedAt: "2026-09-29T12:00:00Z",
+          stars: 5,
+          submittedAt: "2026-09-30T12:00:00Z",
+        },
+      ],
+    });
+
+    render(await CustomerPage());
+    expect(screen.getByText("Your customer rating")).toBeInTheDocument();
+    expect(screen.getByText("4.3 average")).toBeInTheDocument();
+    expect(screen.getByText("7 ratings")).toBeInTheDocument();
+    expect(screen.getByText("The Table")).toBeInTheDocument();
+    expect(screen.getByText("5 stars")).toBeInTheDocument();
+    expect(screen.queryByText(/staff member/i)).not.toBeInTheDocument();
+  });
+  afterEach(cleanup);
+
+  it("shows pending rating prompts and recent rated visits", async () => {
+    createClient.mockResolvedValue(customerClient());
+    loadCustomerVisits.mockResolvedValue([
+      {
+        visitId: "pending-id",
+        restaurantId: "restaurant-id",
+        restaurantName: "Pending Table",
+        recordedAt: "2026-09-29T12:00:00Z",
+        stars: null,
+        submittedAt: null,
+      },
+      {
+        visitId: "rated-id",
+        restaurantId: "restaurant-id",
+        restaurantName: "Rated Table",
+        recordedAt: "2026-09-28T12:00:00Z",
+        stars: 4,
+        submittedAt: "2026-09-28T13:00:00Z",
+      },
+    ]);
+
+    render(await CustomerPage());
+
+    expect(screen.getByText("Pending Table")).toBeInTheDocument();
+    expect(screen.getByText("Rated Table")).toBeInTheDocument();
+    expect(screen.getAllByText("4 stars")).not.toHaveLength(0);
   });
 
   it("shows the authenticated customer's identity and sign-out control", async () => {
@@ -59,6 +135,9 @@ describe("customer home", () => {
     expect(
       screen.getByRole("button", { name: "Sign out" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Browse restaurants" }),
+    ).toHaveAttribute("href", "/restaurants");
   });
 
   it("redirects an unauthenticated visitor to login", async () => {

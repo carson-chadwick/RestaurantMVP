@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import "./globals.css";
 
@@ -14,7 +15,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="flex min-h-screen flex-col">
+        <div className="flex-1">{children}</div>
+        <footer className="border-t border-stone-200 px-6 py-4 text-center text-xs text-stone-500">
+          <Link
+            href="/privacy"
+            className="hover:text-stone-800 hover:underline"
+          >
+            Privacy policy
+          </Link>
+        </footer>
+      </body>
     </html>
   );
 }

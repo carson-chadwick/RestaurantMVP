@@ -23,7 +23,7 @@ The MVP will include:
 * Employee 1–5 star ratings of customers.
 * Average restaurant rating.
 * Average customer rating.
-* Basic customer opt-in/opt-out.
+* Customer identity-sharing acknowledgement at signup.
 * Customer ratings visible only to authorized users.
 
 The MVP will **not** include:
@@ -93,9 +93,9 @@ Build the identity system.
 Build the basic restaurant experience.
 
 * [x] Restaurant profiles.
-* [ ] Restaurant listing/discovery.
-* [ ] Restaurant rating display.
-* [ ] Restaurant rating count.
+* [x] Restaurant listing/discovery.
+* [x] Restaurant rating display.
+* [x] Restaurant rating count.
 
 **Complete when:** Customers can find restaurants and view their ratings.
 
@@ -105,45 +105,40 @@ Build the basic restaurant experience.
 
 Build the first side of the rating system.
 
-* [ ] Submit 1–5 star restaurant rating.
-* [ ] Associate rating with customer and restaurant.
-* [ ] Prevent invalid/unauthorized ratings.
-* [ ] Calculate average restaurant rating.
-* [ ] Display updated rating.
+* [x] Require customer identity-sharing and two-sided-rating acknowledgement at signup.
+* [x] Allow authorized restaurant staff to browse recent customers or search an exact first and last name.
+* [x] Show customer email addresses only inside the authorized staff workflow.
+* [x] Allow staff to record a paid visit only for their own restaurant.
+* [x] Display pending restaurant-rating visits on the customer's dashboard.
+* [x] Submit one immutable 1–5 star restaurant rating per paid visit.
+* [x] Associate the rating with the visit, customer, and restaurant.
+* [x] Prevent invalid and unauthorized visits or ratings.
+* [x] Calculate average restaurant rating.
+* [x] Display the updated public restaurant rating and count immediately.
 
-**Complete when:** Customers can successfully rate restaurants.
+Paid visits are manual staff assertions about payment outside Dining Plus. This phase does not add visit confirmation, payment processing, POS integration, or automated transaction verification.
 
----
-
-## Phase 5 — Customer Privacy
-
-Implement customer participation controls.
-
-* [ ] Customer opt-in/opt-out.
-* [ ] Store participation preference.
-* [ ] Enforce participation rules.
-* [ ] Prevent public access to customer ratings.
-
-**Complete when:** Customer privacy rules are enforced throughout the application.
+**Complete when:** Authorized staff can record a paid visit, the correct customer sees it, and that customer can submit one restaurant rating that immediately updates the restaurant's public average and count.
 
 ---
 
-## Phase 6 — Restaurants Rate Customers
+## Phase 5 — Restaurants Rate Customers
 
 Build the second side of the rating system.
 
-* [ ] Employee portal.
-* [ ] Select eligible customer.
-* [ ] Submit 1–5 star customer rating.
-* [ ] Associate rating with restaurant and customer.
-* [ ] Calculate average customer rating.
-* [ ] Restrict customer rating visibility.
+* [x] Employee portal.
+* [x] Select an existing eligible paid visit for the staff member's restaurant.
+* [x] Require the customer to have rated the restaurant for that visit.
+* [x] Submit one 1–5 star customer rating per eligible visit.
+* [x] Associate the rating with the existing visit, restaurant, customer, and rating staff member.
+* [x] Calculate average customer rating.
+* [x] Restrict customer rating visibility.
 
-**Complete when:** Authorized restaurant employees can securely rate participating customers.
+**Complete when:** Authorized restaurant staff can securely rate a customer once for an existing eligible visit without creating a second visit record.
 
 ---
 
-## Phase 7 — MVP Polish
+## Phase 6 — MVP Polish
 
 Make the complete product reliable enough for testing.
 
@@ -174,6 +169,7 @@ Consider only after testing the core product:
 * Analytics.
 * Search/filtering improvements.
 * Notifications.
+* Customer rating opt-out controls.
 * Native mobile apps.
 
 ---
@@ -191,6 +187,6 @@ Consider only after testing the core product:
 
 ## Current Status
 
-**Phase:** 3 — Restaurants
-**Status:** Phase 2 accounts and roles complete
-**Next Goal:** Implement restaurant profiles.
+**Phase:** 6 — MVP Polish
+**Status:** Phase 5 restaurant-to-customer ratings complete
+**Next Goal:** Validate, harden, and deploy the complete MVP.

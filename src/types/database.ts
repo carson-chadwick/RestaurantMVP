@@ -36,6 +36,7 @@ export type Database = {
         Row: {
           created_at: string;
           first_name: string;
+          identity_disclosure_acknowledged_at: string;
           last_name: string;
           updated_at: string;
           user_id: string;
@@ -43,6 +44,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           first_name: string;
+          identity_disclosure_acknowledged_at: string;
           last_name: string;
           updated_at?: string;
           user_id: string;
@@ -50,11 +52,86 @@ export type Database = {
         Update: {
           created_at?: string;
           first_name?: string;
+          identity_disclosure_acknowledged_at?: string;
           last_name?: string;
           updated_at?: string;
           user_id?: string;
         };
         Relationships: [];
+      };
+      customer_ratings: {
+        Row: {
+          customer_user_id: string;
+          rated_by_staff_user_id: string;
+          restaurant_id: string;
+          stars: number;
+          submitted_at: string;
+          visit_id: string;
+        };
+        Insert: {
+          customer_user_id: string;
+          rated_by_staff_user_id: string;
+          restaurant_id: string;
+          stars: number;
+          submitted_at?: string;
+          visit_id: string;
+        };
+        Update: {
+          customer_user_id?: string;
+          rated_by_staff_user_id?: string;
+          restaurant_id?: string;
+          stars?: number;
+          submitted_at?: string;
+          visit_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "customer_ratings_restaurant_id_fkey";
+            columns: ["restaurant_id"];
+            isOneToOne: false;
+            referencedRelation: "restaurants";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_ratings_visit_relationship";
+            columns: ["visit_id", "customer_user_id", "restaurant_id"];
+            isOneToOne: false;
+            referencedRelation: "paid_visits";
+            referencedColumns: ["id", "customer_user_id", "restaurant_id"];
+          },
+        ];
+      };
+      paid_visits: {
+        Row: {
+          customer_user_id: string;
+          id: string;
+          recorded_at: string;
+          recorded_by_staff_user_id: string;
+          restaurant_id: string;
+        };
+        Insert: {
+          customer_user_id: string;
+          id?: string;
+          recorded_at?: string;
+          recorded_by_staff_user_id: string;
+          restaurant_id: string;
+        };
+        Update: {
+          customer_user_id?: string;
+          id?: string;
+          recorded_at?: string;
+          recorded_by_staff_user_id?: string;
+          restaurant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "paid_visits_restaurant_id_fkey";
+            columns: ["restaurant_id"];
+            isOneToOne: false;
+            referencedRelation: "restaurants";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       restaurant_employees: {
         Row: {
@@ -79,6 +156,45 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "restaurants";
             referencedColumns: ["id"];
+          },
+        ];
+      };
+      restaurant_ratings: {
+        Row: {
+          customer_user_id: string;
+          restaurant_id: string;
+          stars: number;
+          submitted_at: string;
+          visit_id: string;
+        };
+        Insert: {
+          customer_user_id: string;
+          restaurant_id: string;
+          stars: number;
+          submitted_at?: string;
+          visit_id: string;
+        };
+        Update: {
+          customer_user_id?: string;
+          restaurant_id?: string;
+          stars?: number;
+          submitted_at?: string;
+          visit_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_ratings_restaurant_id_fkey";
+            columns: ["restaurant_id"];
+            isOneToOne: false;
+            referencedRelation: "restaurants";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "restaurant_ratings_visit_relationship";
+            columns: ["visit_id", "customer_user_id", "restaurant_id"];
+            isOneToOne: false;
+            referencedRelation: "paid_visits";
+            referencedColumns: ["id", "customer_user_id", "restaurant_id"];
           },
         ];
       };
@@ -155,9 +271,88 @@ export type Database = {
         Args: { target_user_id: string };
         Returns: boolean;
       };
+      current_staff_restaurant_id: { Args: never; Returns: string };
+      get_customer_rating_summary: {
+        Args: never;
+        Returns: {
+          average_rating: number;
+          rating_count: number;
+        }[];
+      };
+      get_public_restaurant: {
+        Args: { target_restaurant_id: string };
+        Returns: {
+          address: string;
+          average_rating: number;
+          description: string;
+          id: string;
+          name: string;
+          phone: string;
+          rating_count: number;
+          weekly_hours: Json;
+        }[];
+      };
       grant_restaurant_employee_access: {
         Args: { employee_email: string };
         Returns: undefined;
+      };
+      is_valid_weekly_hours: { Args: { value: Json }; Returns: boolean };
+      list_customer_rating_history: {
+        Args: never;
+        Returns: {
+          recorded_at: string;
+          restaurant_id: string;
+          restaurant_name: string;
+          stars: number;
+          submitted_at: string;
+          visit_id: string;
+        }[];
+      };
+      list_customer_restaurant_visits: {
+        Args: never;
+        Returns: {
+          recorded_at: string;
+          restaurant_id: string;
+          restaurant_name: string;
+          stars: number;
+          submitted_at: string;
+          visit_id: string;
+        }[];
+      };
+      list_customers_for_visit: {
+        Args: {
+          result_limit?: number;
+          result_offset?: number;
+          search_first_name?: string;
+          search_last_name?: string;
+        };
+        Returns: {
+          average_rating: number;
+          email: string;
+          first_name: string;
+          last_name: string;
+          rating_count: number;
+          total_count: number;
+          user_id: string;
+        }[];
+      };
+      list_public_restaurants: {
+        Args: {
+          result_limit?: number;
+          result_offset?: number;
+          search_text?: string;
+        };
+        Returns: {
+          address: string;
+          average_rating: number;
+          description: string;
+          id: string;
+          name: string;
+          phone: string;
+          rating_count: number;
+          total_count: number;
+          weekly_hours: Json;
+        }[];
       };
       list_restaurant_employees: {
         Args: never;
@@ -168,9 +363,48 @@ export type Database = {
           user_id: string;
         }[];
       };
+      list_staff_customer_rating_queue: {
+        Args: { result_limit?: number; result_offset?: number };
+        Returns: {
+          average_rating: number;
+          customer_email: string;
+          customer_first_name: string;
+          customer_last_name: string;
+          customer_user_id: string;
+          rating_count: number;
+          recorded_at: string;
+          total_count: number;
+          visit_id: string;
+        }[];
+      };
+      list_staff_recent_visits: {
+        Args: never;
+        Returns: {
+          customer_email: string;
+          customer_first_name: string;
+          customer_last_name: string;
+          customer_user_id: string;
+          is_rated: boolean;
+          rating_status: string;
+          recorded_at: string;
+          visit_id: string;
+        }[];
+      };
+      record_paid_visit: {
+        Args: { target_customer_user_id: string };
+        Returns: string;
+      };
       revoke_restaurant_employee_access: {
         Args: { target_employee_id: string };
         Returns: undefined;
+      };
+      submit_customer_rating: {
+        Args: { rating_stars: number; target_visit_id: string };
+        Returns: string;
+      };
+      submit_restaurant_rating: {
+        Args: { rating_stars: number; target_visit_id: string };
+        Returns: string;
       };
     };
     Enums: {

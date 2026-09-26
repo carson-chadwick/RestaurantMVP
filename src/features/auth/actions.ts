@@ -28,6 +28,7 @@ export async function signup(
     email: formValue(formData, "email"),
     password: formValue(formData, "password"),
     confirmPassword: formValue(formData, "confirmPassword"),
+    privacyAcknowledged: formData.get("privacyAcknowledged") === "on",
   });
 
   if (!result.success) {
@@ -43,6 +44,7 @@ export async function signup(
         account_type: "customer",
         first_name: result.data.firstName,
         last_name: result.data.lastName,
+        identity_disclosure_acknowledged: true,
       },
     },
   });

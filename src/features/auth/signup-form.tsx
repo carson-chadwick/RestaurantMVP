@@ -57,11 +57,42 @@ export function SignupForm() {
         autoComplete="new-password"
         error={state.fieldErrors?.confirmPassword?.[0]}
       />
+      <div>
+        <label className="flex items-start gap-3 text-sm leading-6 text-stone-700">
+          <input
+            name="privacyAcknowledged"
+            type="checkbox"
+            required
+            aria-invalid={Boolean(state.fieldErrors?.privacyAcknowledged)}
+            className="mt-1 h-4 w-4 rounded border-stone-300 text-amber-700"
+          />
+          <span>
+            I acknowledge that authorized restaurant staff may use my name and
+            email to identify me and record visits, and may rate me after I rate
+            their restaurant for an eligible visit.
+          </span>
+        </label>
+        {state.fieldErrors?.privacyAcknowledged?.[0] ? (
+          <p className="mt-2 text-sm text-red-700">
+            {state.fieldErrors.privacyAcknowledged[0]}
+          </p>
+        ) : null}
+      </div>
       <SubmitButton
         idleLabel="Create account"
         pending={pending}
         pendingLabel="Creating account…"
       />
+      <p className="text-center text-xs text-stone-500">
+        Read our{" "}
+        <Link
+          href="/privacy"
+          className="font-medium text-amber-700 hover:underline"
+        >
+          privacy policy
+        </Link>
+        .
+      </p>
       <p className="text-center text-sm text-stone-600">
         Already have an account?{" "}
         <Link

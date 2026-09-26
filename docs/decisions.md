@@ -13,6 +13,30 @@ For each significant decision, record:
 
 ---
 
+## 2026-09-30 — Private customer reputation and visit-based rating queue
+
+* **Decision:** Active restaurant staff rate customers only from a paginated queue of existing visits for which the customer has already rated the restaurant. All authorized staff may see customer aggregates in the protected visit workflow. Individual restaurant-to-customer scores are visible only to the rated customer and identify the restaurant and visit date, not the submitting staff member.
+* **Context:** Phase 5 completes the two-sided reputation flow while customer reputation remains sensitive.
+* **Rationale:** A complete eligibility queue prevents older visits from becoming inaccessible, and aggregate-only staff access supports hospitality decisions without exposing cross-restaurant rating histories.
+* **Alternatives considered:** Limiting eligibility to the 20 newest visits, searching for each eligible customer, showing individual values to the submitting restaurant, and exposing the submitting staff identity to customers.
+* **Consequences:** Customer ratings are immutable, derived aggregates are private, and no public customer reputation interface exists.
+
+## 2026-09-29 — Signup acknowledgement replaces MVP participation controls
+
+* **Decision:** Customer signup requires one acknowledgement covering protected name/email sharing and eligibility for restaurant-to-customer ratings after an eligible restaurant rating. The MVP has no later opt-out control. Authorized staff may browse recent acknowledged customers or search exact names, and duplicate paid visits are permitted.
+* **Context:** The visit workflow needs a simple customer picker and a clear, lightweight privacy disclosure without a standalone privacy-settings phase.
+* **Rationale:** One signup acknowledgement and strict authorization keep the MVP understandable while avoiding participation-state complexity. A global privacy-policy link keeps the disclosure accessible.
+* **Alternatives considered:** Enrollment after the first rating, a dedicated opt-in/opt-out phase, repeated consent prompts, search-only customer selection, and duplicate-visit restrictions.
+* **Consequences:** Existing customers are backfilled as acknowledged. Customer identities, visits, and customer ratings remain non-public. The former participation and opt-out decision is superseded, and opt-out controls move to post-MVP consideration.
+
+## 2026-09-28 — Public restaurant discovery through safe database functions
+
+* **Decision:** Restaurant listings and profiles are public without authentication. Name discovery uses a twelve-item alphabetical directory with literal substring search and previous/next navigation. Read-only database functions expose only safe listing fields and rating aggregates; Phase 3 returns the zero-rating state.
+* **Context:** Phase 3 must let customers find restaurants and see rating presentation before Phase 4 creates visits and restaurant ratings.
+* **Rationale:** Stable public functions provide a narrow privacy boundary and let Phase 4 add live aggregates without changing route or application contracts. Simple name search and pagination satisfy MVP discovery without introducing advanced filtering.
+* **Alternatives considered:** Customer-only discovery, direct anonymous table access, list-only browsing, search-only browsing, unpaginated results, URL slugs, and pulling rating storage into Phase 3.
+* **Consequences:** Public routes use restaurant UUIDs. Owner and staff identifiers remain private. Rating stars and counts show an honest empty state until Phase 4 changes the function internals to derive live aggregates.
+
 ## 2026-09-27 — Minimal always-eligible restaurant profiles
 
 * **Decision:** Restaurant owners may manage a required name plus optional free-text address, phone, short description, and structured Monday-through-Sunday hours. Each day is closed or has one local opening/closing interval. Profiles have no draft or publication state, and customer rating summaries are derived rather than editable.
@@ -53,7 +77,7 @@ For each significant decision, record:
 * **Alternatives considered:** Customer-entered payment, automated payment trigger, visit confirmation, email prompt.
 * **Consequences:** A paid visit is an unverified staff assertion. Duplicate or false visit entry remains a product risk for MVP testing.
 
-## 2026-09-21 — Customer participation and private reputation
+## 2026-09-21 — Customer participation and private reputation (superseded)
 
 * **Decision:** A customer's first restaurant rating enables participation in customer ratings. Staff may rate that customer once for the rated visit. An explicit opt-out hides retained customer ratings from staff and blocks new ones; later restaurant ratings do not silently undo the opt-out. Participating customers see their own average and count; authorized restaurant staff see the aggregate and count, not individual ratings from other restaurants.
 * **Context:** Customer reputation is sensitive and must not be public.
