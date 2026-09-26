@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react";
+import Link from "next/link";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { listPublicRestaurants } = vi.hoisted(() => ({
@@ -10,6 +11,14 @@ vi.mock("@/features/restaurants/public-data", async (importOriginal) => {
     await importOriginal<typeof import("@/features/restaurants/public-data")>();
   return { ...original, listPublicRestaurants };
 });
+vi.mock("@/features/auth/public-account-navigation", () => ({
+  PublicAccountNavigation: vi.fn(async () => (
+    <nav aria-label="Account navigation">
+      <Link href="/customer">Customer home</Link>
+      <button type="button">Sign out</button>
+    </nav>
+  )),
+}));
 
 import { emptyRatingSummary } from "@/features/restaurants/profile";
 
@@ -46,6 +55,13 @@ describe("public restaurant directory", () => {
     expect(
       screen.getByRole("link", { name: restaurant.name }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Customer home" })).toHaveAttribute(
+      "href",
+      "/customer",
+    );
+    expect(
+      screen.getByRole("button", { name: "Sign out" }),
+    ).toBeInTheDocument();
   });
 
   it("distinguishes empty search results from an empty directory", async () => {
@@ -81,6 +97,9 @@ describe("public restaurant directory", () => {
       await RestaurantDirectoryPage({ searchParams: Promise.resolve({}) }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent(/couldn't load/i);
+    expect(
+      screen.getByRole("button", { name: "Sign out" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
       "href",
       "/restaurants",

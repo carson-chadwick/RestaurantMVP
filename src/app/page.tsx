@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { PublicAccountNavigation } from "@/features/auth/public-account-navigation";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-16">
       <section className="mx-auto max-w-2xl text-center">
@@ -14,31 +14,11 @@ export default function Home() {
           A two-sided reputation platform helping restaurants and customers
           build better dining experiences together.
         </p>
-        <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link
-            href="/restaurants"
-            className="rounded-xl bg-amber-700 px-6 py-3 font-semibold text-white hover:bg-amber-800"
-          >
-            Browse restaurants
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-xl bg-stone-900 px-6 py-3 font-semibold text-white hover:bg-stone-700"
-          >
-            Create customer account
-          </Link>
-          <Link
-            href="/restaurant/signup"
-            className="rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-stone-800 hover:bg-stone-50"
-          >
-            Create restaurant account
-          </Link>
-          <Link
-            href="/login"
-            className="rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-stone-800 hover:bg-stone-50"
-          >
-            Sign in
-          </Link>
+        <div className="mt-10">
+          {await PublicAccountNavigation({
+            includeBrowse: true,
+            includeSignupActions: true,
+          })}
         </div>
       </section>
     </main>

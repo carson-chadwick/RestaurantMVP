@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react";
+import Link from "next/link";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { getPublicRestaurant, notFound } = vi.hoisted(() => ({
@@ -14,6 +15,14 @@ vi.mock("@/features/restaurants/public-data", async (importOriginal) => {
     await importOriginal<typeof import("@/features/restaurants/public-data")>();
   return { ...original, getPublicRestaurant };
 });
+vi.mock("@/features/auth/public-account-navigation", () => ({
+  PublicAccountNavigation: vi.fn(async () => (
+    <nav aria-label="Account navigation">
+      <Link href="/customer">Customer home</Link>
+      <button type="button">Sign out</button>
+    </nav>
+  )),
+}));
 
 import { emptyRatingSummary } from "@/features/restaurants/profile";
 
@@ -51,6 +60,9 @@ describe("public restaurant profile", () => {
     expect(
       screen.getByRole("link", { name: /restaurant directory/i }),
     ).toHaveAttribute("href", "/restaurants");
+    expect(
+      screen.getByRole("button", { name: "Sign out" }),
+    ).toBeInTheDocument();
   });
 
   it("returns not found for malformed or missing IDs", async () => {
@@ -73,6 +85,9 @@ describe("public restaurant profile", () => {
       }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent(/couldn't load/i);
+    expect(
+      screen.getByRole("button", { name: "Sign out" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
       "href",
       `/restaurants/${id}`,

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { PublicAccountNavigation } from "@/features/auth/public-account-navigation";
 import { RestaurantDetails } from "@/features/restaurants/profile-components";
 import {
   getPublicRestaurant,
@@ -16,13 +17,14 @@ export default async function PublicRestaurantPage({
 }: Readonly<PublicRestaurantPageProps>) {
   const { restaurantId } = await params;
   if (!isRestaurantId(restaurantId)) notFound();
+  const accountNavigation = await PublicAccountNavigation({ compact: true });
 
   let restaurant;
   try {
     restaurant = await getPublicRestaurant(restaurantId);
   } catch {
     return (
-      <ProfileShell>
+      <ProfileShell accountNavigation={accountNavigation}>
         <div
           role="alert"
           className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
@@ -42,7 +44,7 @@ export default async function PublicRestaurantPage({
   if (!restaurant) notFound();
 
   return (
-    <ProfileShell>
+    <ProfileShell accountNavigation={accountNavigation}>
       <article className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
         <p className="text-sm font-semibold text-amber-700">
           Restaurant profile
@@ -58,16 +60,25 @@ export default async function PublicRestaurantPage({
   );
 }
 
-function ProfileShell({ children }: Readonly<{ children: React.ReactNode }>) {
+function ProfileShell({
+  accountNavigation,
+  children,
+}: Readonly<{
+  accountNavigation: React.ReactNode;
+  children: React.ReactNode;
+}>) {
   return (
     <main className="min-h-screen px-6 py-10 sm:px-10">
       <div className="mx-auto max-w-3xl">
-        <Link
-          href="/restaurants"
-          className="text-sm font-semibold text-amber-700"
-        >
-          ← Restaurant directory
-        </Link>
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Link
+            href="/restaurants"
+            className="text-sm font-semibold text-amber-700"
+          >
+            ← Restaurant directory
+          </Link>
+          {accountNavigation}
+        </header>
         <div className="mt-8">{children}</div>
       </div>
     </main>

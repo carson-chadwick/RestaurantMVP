@@ -1,11 +1,23 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import Link from "next/link";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/features/auth/public-account-navigation", () => ({
+  PublicAccountNavigation: vi.fn(async () => (
+    <nav aria-label="Account navigation">
+      <Link href="/restaurants">Browse restaurants</Link>
+      <Link href="/signup">Create customer account</Link>
+      <Link href="/restaurant/signup">Create restaurant account</Link>
+      <Link href="/login">Sign in</Link>
+    </nav>
+  )),
+}));
 
 import Home from "./page";
 
 describe("Home", () => {
-  it("introduces the Dining Plus application", () => {
-    render(<Home />);
+  it("introduces the Dining Plus application", async () => {
+    render(await Home());
 
     expect(
       screen.getByRole("heading", {

@@ -1,12 +1,17 @@
 import Link from "next/link";
 
-export default function PrivacyPage() {
+import { PublicAccountNavigation } from "@/features/auth/public-account-navigation";
+
+export default async function PrivacyPage() {
   return (
     <main className="min-h-screen px-6 py-12 sm:px-10">
       <article className="mx-auto max-w-3xl rounded-3xl border border-stone-200 bg-white p-6 sm:p-12">
-        <Link href="/" className="text-sm font-semibold text-amber-700">
-          ← Dining Plus
-        </Link>
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Link href="/" className="text-sm font-semibold text-amber-700">
+            ← Dining Plus
+          </Link>
+          {await PublicAccountNavigation({ compact: true })}
+        </header>
         <h1 className="mt-8 text-4xl font-semibold tracking-tight text-stone-900">
           Privacy policy
         </h1>

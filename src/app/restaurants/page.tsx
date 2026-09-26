@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { PublicAccountNavigation } from "@/features/auth/public-account-navigation";
 import {
   RestaurantCard,
   RestaurantPagination,
@@ -20,7 +21,10 @@ type RestaurantDirectoryPageProps = {
 export default async function RestaurantDirectoryPage({
   searchParams,
 }: Readonly<RestaurantDirectoryPageProps>) {
-  const parameters = await searchParams;
+  const [parameters, accountNavigation] = await Promise.all([
+    searchParams,
+    PublicAccountNavigation({ compact: true }),
+  ]);
   const search = normalizeRestaurantSearch(parameters.q);
   const page = normalizeRestaurantPage(parameters.page);
 
@@ -29,7 +33,7 @@ export default async function RestaurantDirectoryPage({
     result = await listPublicRestaurants(search, page);
   } catch {
     return (
-      <DirectoryShell>
+      <DirectoryShell accountNavigation={accountNavigation}>
         <div
           role="alert"
           className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
@@ -47,7 +51,7 @@ export default async function RestaurantDirectoryPage({
   }
 
   return (
-    <DirectoryShell>
+    <DirectoryShell accountNavigation={accountNavigation}>
       <form
         action="/restaurants"
         method="get"
@@ -121,7 +125,13 @@ export default async function RestaurantDirectoryPage({
   );
 }
 
-function DirectoryShell({ children }: Readonly<{ children: React.ReactNode }>) {
+function DirectoryShell({
+  accountNavigation,
+  children,
+}: Readonly<{
+  accountNavigation: React.ReactNode;
+  children: React.ReactNode;
+}>) {
   return (
     <main className="min-h-screen px-6 py-10 sm:px-10">
       <div className="mx-auto max-w-6xl">
@@ -132,12 +142,7 @@ function DirectoryShell({ children }: Readonly<{ children: React.ReactNode }>) {
           >
             Dining Plus
           </Link>
-          <Link
-            href="/login"
-            className="text-sm font-semibold text-stone-700 hover:text-stone-900"
-          >
-            Sign in
-          </Link>
+          {accountNavigation}
         </header>
         <section className="py-12">
           <p className="text-sm font-semibold text-amber-700">
