@@ -72,7 +72,13 @@ export default async function StaffVisitsPage({
           role="alert"
           className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
         >
-          We couldn&apos;t load visit tools. Please try again.
+          <p>We couldn&apos;t load visit tools.</p>
+          <Link
+            href="/restaurant/visits"
+            className="mt-3 inline-block font-semibold underline"
+          >
+            Try again
+          </Link>
         </div>
       </VisitsShell>
     );
@@ -138,7 +144,9 @@ export default async function StaffVisitsPage({
               <h2 className="font-semibold text-stone-900">
                 {customer.firstName} {customer.lastName}
               </h2>
-              <p className="mt-1 text-sm text-stone-500">{customer.email}</p>
+              <p className="mt-1 text-sm break-all text-stone-500">
+                {customer.email}
+              </p>
               <div className="mt-3">
                 <CustomerRatingSummaryDisplay {...customer} />
               </div>
@@ -196,7 +204,7 @@ export default async function StaffVisitsPage({
               <h3 className="font-semibold text-stone-900">
                 {visit.firstName} {visit.lastName}
               </h3>
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm break-words text-stone-500">
                 {visit.email} · Visit{" "}
                 {new Date(visit.recordedAt).toLocaleString("en-US")}
               </p>
@@ -251,7 +259,7 @@ export default async function StaffVisitsPage({
                 <p className="font-semibold text-stone-900">
                   {visit.firstName} {visit.lastName}
                 </p>
-                <p className="text-sm text-stone-500">
+                <p className="text-sm break-words text-stone-500">
                   {visit.email} ·{" "}
                   {new Date(visit.recordedAt).toLocaleString("en-US")}
                 </p>

@@ -34,7 +34,13 @@ export default async function RestaurantDirectoryPage({
           role="alert"
           className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
         >
-          We couldn&apos;t load restaurants. Please try again.
+          <p>We couldn&apos;t load restaurants.</p>
+          <Link
+            href="/restaurants"
+            className="mt-3 inline-block font-semibold underline"
+          >
+            Try again
+          </Link>
         </div>
       </DirectoryShell>
     );
@@ -119,7 +125,7 @@ function DirectoryShell({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <main className="min-h-screen px-6 py-10 sm:px-10">
       <div className="mx-auto max-w-6xl">
-        <header className="flex items-center justify-between border-b border-stone-200 pb-6">
+        <header className="flex items-center justify-between gap-4 border-b border-stone-200 pb-6">
           <Link
             href="/"
             className="text-sm font-semibold tracking-[0.18em] text-amber-700 uppercase"

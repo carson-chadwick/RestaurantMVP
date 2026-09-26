@@ -7,14 +7,14 @@ import { createClient } from "@/lib/supabase/server";
 
 function PortalHeader() {
   return (
-    <header className="flex items-center justify-between gap-6 border-b border-stone-200 pb-6">
+    <header className="flex flex-col gap-4 border-b border-stone-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
       <Link
         href="/"
         className="text-sm font-semibold tracking-[0.18em] text-amber-700 uppercase"
       >
         Dining Plus
       </Link>
-      <div className="flex items-center gap-3">
+      <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
         <Link
           href="/restaurant/visits"
           className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
@@ -177,7 +177,7 @@ export default async function RestaurantPage() {
               Employee access active
             </h2>
             <p className="mt-2 leading-7 text-stone-600">
-              Customer visits and rating tools will appear here in later phases.
+              Use Visits to record paid visits and rate eligible customers.
             </p>
           </div>
         </section>

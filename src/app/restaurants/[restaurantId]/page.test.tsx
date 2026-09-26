@@ -73,6 +73,10 @@ describe("public restaurant profile", () => {
       }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent(/couldn't load/i);
+    expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
+      "href",
+      `/restaurants/${id}`,
+    );
     expect(screen.queryByText(/database detail/i)).not.toBeInTheDocument();
   });
 });

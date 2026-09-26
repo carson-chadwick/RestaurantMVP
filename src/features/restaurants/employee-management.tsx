@@ -79,13 +79,15 @@ export function EmployeeManagement({
             {employees.map((employee) => (
               <li
                 key={employee.user_id}
-                className="flex items-center justify-between gap-4 py-4"
+                className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="font-medium text-stone-900">
                     {employee.first_name} {employee.last_name}
                   </p>
-                  <p className="text-sm text-stone-600">{employee.email}</p>
+                  <p className="text-sm break-all text-stone-600">
+                    {employee.email}
+                  </p>
                 </div>
                 <form action={revokeEmployeeAccess}>
                   <input

@@ -27,7 +27,13 @@ export default async function PublicRestaurantPage({
           role="alert"
           className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
         >
-          We couldn&apos;t load this restaurant. Please try again.
+          <p>We couldn&apos;t load this restaurant.</p>
+          <Link
+            href={`/restaurants/${restaurantId}`}
+            className="mt-3 inline-block font-semibold underline"
+          >
+            Try again
+          </Link>
         </div>
       </ProfileShell>
     );
@@ -37,7 +43,7 @@ export default async function PublicRestaurantPage({
 
   return (
     <ProfileShell>
-      <article className="rounded-3xl border border-stone-200 bg-white p-8 sm:p-10">
+      <article className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
         <p className="text-sm font-semibold text-amber-700">
           Restaurant profile
         </p>

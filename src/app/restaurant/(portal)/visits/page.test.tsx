@@ -144,5 +144,9 @@ describe("staff visit workspace", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       /couldn't load visit tools/i,
     );
+    expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
+      "href",
+      "/restaurant/visits",
+    );
   });
 });

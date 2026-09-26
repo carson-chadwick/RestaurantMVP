@@ -3,15 +3,16 @@
 Dining Plus is a two-sided restaurant reputation platform. This repository
 contains the single Next.js application described in the project architecture.
 
-Phase 1 (Foundation) is complete. The web scaffold, development quality gates,
-hosted Supabase connection, authentication foundation, migration workflow, and
-Vercel deployment are configured. Development now proceeds through Phase 2
-(Accounts & Roles).
+The MVP implements customer, restaurant-owner, and restaurant-employee
+accounts; public restaurant discovery; owner-managed restaurant profiles;
+staff-recorded paid visits; and immutable two-sided 1–5 star ratings. Public
+restaurant aggregates never expose customer identity, and customer reputation
+remains private to that customer and authorized restaurant staff.
 
-Customer signup and login are available at `/signup` and `/login`. A successful
-authentication opens the minimal customer home at `/customer`, where the user
-can confirm their account and sign out. Password recovery is deferred for the
-MVP.
+Customer signup and login are available at `/signup` and `/login`. Customer
+signup requires acknowledgement of the protected identity-sharing and
+two-sided-rating workflow. `/customer` shows pending restaurant ratings,
+restaurant-rating history, and the customer's private reputation.
 
 Restaurant owners create a dedicated account at `/restaurant/signup`, and
 employees create theirs at `/employee/signup`. All account types use `/login`;
@@ -21,10 +22,10 @@ are exclusive, and each owner or employee is limited to one restaurant.
 
 Authenticated customer and restaurant areas are protected by trusted database
 role checks. Users who open the other role's portal are redirected to their own
-without being signed out. Customers manage their name at `/customer/profile`;
-owners and employees manage their personal name at `/restaurant/profile`, where
-owners may also update the restaurant name. Email and account roles are
-read-only for the MVP.
+without being signed out. Staff use `/restaurant/visits` to find customers,
+record visits, and rate customers for eligible visits. Owners manage public
+restaurant details and employee access. Public discovery is available at
+`/restaurants`, and the privacy notice is always available at `/privacy`.
 
 ## Prerequisites
 
@@ -61,6 +62,36 @@ npm run ci
 This checks formatting, lint rules, TypeScript types, unit tests, the production
 build, and production dependency vulnerabilities. Individual checks are also
 available through the scripts in `package.json`.
+
+Use [`docs/release-checklist.md`](docs/release-checklist.md) for the final
+desktop, mobile, role, privacy, and production smoke pass.
+
+## Persistent demo data
+
+`npm run demo:seed` creates or resumes three fictional restaurant stories in
+the linked Supabase project using normal signup, login, RLS, and trusted rating
+operations. It does not use or require a service-role key. Demo records are
+persistent and intentionally labeled `(Demo)`.
+
+The first run creates `.env.demo.local` with a strong shared password if neither
+that file nor `DINING_PLUS_DEMO_PASSWORD` supplies one. The file is ignored by
+Git. Never commit, print, or publish its value.
+
+```bash
+npm run demo:seed
+```
+
+Demo accounts use these fictional emails:
+
+| Role      | Emails                                                                                                                                                                                                              |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Owners    | `demo.owner.cedar@example.com`, `demo.owner.northstar@example.com`, `demo.owner.juniper@example.com`                                                                                                                |
+| Employees | `demo.employee.cedar@example.com`, `demo.employee.northstar@example.com`, `demo.employee.juniper@example.com`                                                                                                       |
+| Customers | `demo.customer.avery@example.com`, `demo.customer.jordan@example.com`, `demo.customer.morgan@example.com`, `demo.customer.riley@example.com`, `demo.customer.casey@example.com`, `demo.customer.taylor@example.com` |
+
+The seeder is safe to resume after interruption and skips scenario states that
+are already satisfied. Run it twice during release verification to confirm the
+second execution does not duplicate completed demo stories.
 
 ## Environment variables
 

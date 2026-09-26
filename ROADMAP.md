@@ -142,14 +142,19 @@ Build the second side of the rating system.
 
 Make the complete product reliable enough for testing.
 
-* [ ] Test complete customer flow.
-* [ ] Test complete restaurant/employee flow.
-* [ ] Handle errors and empty states.
-* [ ] Verify mobile/responsive behavior.
-* [ ] Review authentication and authorization.
-* [ ] Review privacy and security.
-* [ ] Fix critical bugs.
+* [x] Test complete customer flow.
+* [x] Test complete restaurant/employee flow.
+* [x] Handle errors and empty states.
+* [x] Verify mobile/responsive behavior.
+* [x] Review authentication and authorization.
+* [x] Review privacy and security.
+* [x] Fix critical bugs.
 * [ ] Deploy testable MVP.
+
+The release candidate passes local CI, linked-schema validation, privacy and
+authorization probes, responsive public-route checks, and persistent demo-data
+seeding. Deployment remains open until the user pushes the Phase 6 changes and
+the resulting Vercel release passes the production smoke checklist.
 
 **Complete when:** The core product works end-to-end and is ready for initial users.
 
@@ -188,5 +193,5 @@ Consider only after testing the core product:
 ## Current Status
 
 **Phase:** 6 — MVP Polish
-**Status:** Phase 5 restaurant-to-customer ratings complete
-**Next Goal:** Validate, harden, and deploy the complete MVP.
+**Status:** Phase 6 release candidate verified locally; production deployment pending
+**Next Goal:** Push the Phase 6 release candidate and complete the live Vercel smoke test.

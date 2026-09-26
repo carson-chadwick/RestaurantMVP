@@ -81,5 +81,9 @@ describe("public restaurant directory", () => {
       await RestaurantDirectoryPage({ searchParams: Promise.resolve({}) }),
     );
     expect(screen.getByRole("alert")).toHaveTextContent(/couldn't load/i);
+    expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
+      "href",
+      "/restaurants",
+    );
   });
 });

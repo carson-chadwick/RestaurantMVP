@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen px-6 py-12 sm:px-10">
-      <article className="mx-auto max-w-3xl rounded-3xl border border-stone-200 bg-white p-8 sm:p-12">
+      <article className="mx-auto max-w-3xl rounded-3xl border border-stone-200 bg-white p-6 sm:p-12">
         <Link href="/" className="text-sm font-semibold text-amber-700">
           ← Dining Plus
         </Link>

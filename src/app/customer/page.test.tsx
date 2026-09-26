@@ -154,4 +154,16 @@ describe("customer home", () => {
     );
     expect(signOut).toHaveBeenCalledOnce();
   });
+
+  it("offers a safe retry when private dashboard data cannot load", async () => {
+    createClient.mockResolvedValue(customerClient());
+    loadCustomerVisits.mockRejectedValue(new Error("private detail"));
+
+    render(await CustomerPage());
+    expect(screen.getByRole("alert")).toHaveTextContent(/couldn't load/i);
+    expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
+      "href",
+      "/customer",
+    );
+  });
 });

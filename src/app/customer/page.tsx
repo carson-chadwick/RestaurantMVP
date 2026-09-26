@@ -49,14 +49,14 @@ export default async function CustomerPage() {
   return (
     <main className="min-h-screen px-6 py-10 sm:px-10">
       <div className="mx-auto max-w-5xl">
-        <header className="flex items-center justify-between gap-6 border-b border-stone-200 pb-6">
+        <header className="flex flex-col gap-4 border-b border-stone-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href="/"
             className="text-sm font-semibold tracking-[0.18em] text-amber-700 uppercase"
           >
             Dining Plus
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
             <Link
               href="/restaurants"
               className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
@@ -92,7 +92,13 @@ export default async function CustomerPage() {
               role="alert"
               className="mt-10 rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
             >
-              We couldn&apos;t load your restaurant visits. Please try again.
+              <p>We couldn&apos;t load your restaurant visits.</p>
+              <Link
+                href="/customer"
+                className="mt-3 inline-block font-semibold underline"
+              >
+                Try again
+              </Link>
             </div>
           ) : (
             <>

@@ -83,7 +83,7 @@ export default async function RestaurantProfilePage() {
           ← Restaurant portal
         </Link>
         <section className="mt-8 space-y-8">
-          <div className="rounded-3xl border border-stone-200 bg-white p-8 sm:p-10">
+          <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
             <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
               Staff profile
             </h1>
@@ -101,7 +101,7 @@ export default async function RestaurantProfilePage() {
           </div>
 
           {role === "restaurant_owner" && restaurantProfile ? (
-            <div className="rounded-3xl border border-stone-200 bg-white p-8 sm:p-10">
+            <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
               <h2 className="text-2xl font-semibold text-stone-900">
                 Restaurant profile
               </h2>
@@ -113,7 +113,7 @@ export default async function RestaurantProfilePage() {
               </div>
             </div>
           ) : (
-            <div className="rounded-3xl border border-stone-200 bg-white p-8">
+            <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8">
               <h2 className="text-lg font-semibold text-stone-900">
                 {restaurantProfile?.name ?? "Waiting for restaurant access"}
               </h2>

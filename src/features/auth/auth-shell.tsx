@@ -11,7 +11,7 @@ export function AuthShell({
 }>) {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-12">
-      <section className="w-full max-w-md rounded-3xl border border-stone-200 bg-white p-8 shadow-sm sm:p-10">
+      <section className="w-full max-w-md rounded-3xl border border-stone-200 bg-white p-6 shadow-sm sm:p-10">
         <Link
           href="/"
           className="text-sm font-semibold tracking-[0.18em] text-amber-700 uppercase"

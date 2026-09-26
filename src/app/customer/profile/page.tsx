@@ -23,7 +23,7 @@ export default async function CustomerProfilePage() {
         <Link href="/customer" className="text-sm font-semibold text-amber-700">
           ← Customer home
         </Link>
-        <section className="mt-8 rounded-3xl border border-stone-200 bg-white p-8 sm:p-10">
+        <section className="mt-8 rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
           <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
             Customer profile
           </h1>
