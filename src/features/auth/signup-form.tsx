@@ -15,10 +15,7 @@ export function SignupForm() {
   return (
     <form action={formAction} className="space-y-5" noValidate>
       {state.formError ? (
-        <p
-          role="alert"
-          className="rounded-xl bg-red-50 p-3 text-sm text-red-800"
-        >
+        <p role="alert" className="ui-status-error text-sm">
           {state.formError}
         </p>
       ) : null}
@@ -58,13 +55,13 @@ export function SignupForm() {
         error={state.fieldErrors?.confirmPassword?.[0]}
       />
       <div>
-        <label className="flex items-start gap-3 text-sm leading-6 text-stone-700">
+        <label className="flex items-start gap-3 text-sm leading-6 text-[var(--ink-soft)]">
           <input
             name="privacyAcknowledged"
             type="checkbox"
             required
             aria-invalid={Boolean(state.fieldErrors?.privacyAcknowledged)}
-            className="mt-1 h-4 w-4 rounded border-stone-300 text-amber-700"
+            className="mt-1 h-5 w-5 accent-[var(--cognac)]"
           />
           <span>
             I acknowledge that authorized restaurant staff may use my name and
@@ -87,17 +84,25 @@ export function SignupForm() {
         Read our{" "}
         <Link
           href="/privacy"
-          className="font-medium text-amber-700 hover:underline"
+          className="font-semibold text-[var(--cognac)] hover:underline"
         >
           privacy policy
         </Link>
         .
       </p>
       <p className="text-center text-sm text-stone-600">
+        <Link
+          href="/signup"
+          className="font-semibold text-[var(--cognac)] hover:underline"
+        >
+          Choose another account type
+        </Link>
+      </p>
+      <p className="text-center text-sm text-stone-600">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-semibold text-amber-700 hover:text-amber-800"
+          className="font-semibold text-[var(--cognac)] hover:underline"
         >
           Sign in
         </Link>

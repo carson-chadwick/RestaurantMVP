@@ -25,7 +25,7 @@ describe("PublicAccountNavigation", () => {
     render(
       await PublicAccountNavigation({
         includeBrowse: true,
-        includeSignupActions: true,
+        includeSignupAction: true,
       }),
     );
 
@@ -37,11 +37,8 @@ describe("PublicAccountNavigation", () => {
       "/login",
     );
     expect(
-      screen.getByRole("link", { name: "Create customer account" }),
+      screen.getByRole("link", { name: "Create account" }),
     ).toHaveAttribute("href", "/signup");
-    expect(
-      screen.getByRole("link", { name: "Create restaurant account" }),
-    ).toHaveAttribute("href", "/restaurant/signup");
     expect(
       screen.queryByRole("button", { name: "Sign out" }),
     ).not.toBeInTheDocument();
@@ -55,7 +52,7 @@ describe("PublicAccountNavigation", () => {
     render(
       await PublicAccountNavigation({
         includeBrowse: true,
-        includeSignupActions: true,
+        includeSignupAction: true,
       }),
     );
 

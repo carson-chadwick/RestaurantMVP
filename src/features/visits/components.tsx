@@ -34,7 +34,9 @@ export function CustomerRatingSummaryDisplay({
           <span
             key={index}
             className={
-              index < filledStars ? "text-amber-500" : "text-stone-300"
+              index < filledStars
+                ? "text-[var(--cognac-bright)]"
+                : "text-[#d7d0c5]"
             }
           >
             {index < filledStars ? "★" : "☆"}
@@ -62,10 +64,13 @@ export function RecordVisitControl({
   );
   return (
     <details className="mt-4">
-      <summary className="cursor-pointer font-semibold text-amber-700">
+      <summary className="cursor-pointer font-semibold text-[var(--cognac)]">
         Select customer
       </summary>
-      <form action={action} className="mt-3 rounded-xl bg-stone-50 p-4">
+      <form
+        action={action}
+        className="mt-3 rounded-xl bg-[var(--surface-subtle)] p-4"
+      >
         <input type="hidden" name="customerId" value={customer.userId} />
         <p className="text-sm text-stone-700">
           Record a paid visit for {customer.firstName} {customer.lastName} (
@@ -84,7 +89,7 @@ export function RecordVisitControl({
         <button
           type="submit"
           disabled={pending || Boolean(state.success)}
-          className="mt-3 rounded-lg bg-stone-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          className="ui-button-primary mt-3 disabled:opacity-60"
         >
           {pending ? "Recording…" : "Confirm visit"}
         </button>
@@ -102,10 +107,13 @@ export function RestaurantRatingForm({
   );
   return (
     <details className="mt-4">
-      <summary className="cursor-pointer font-semibold text-amber-700">
+      <summary className="cursor-pointer font-semibold text-[var(--cognac)]">
         Rate this visit
       </summary>
-      <form action={action} className="mt-3 rounded-xl bg-stone-50 p-4">
+      <form
+        action={action}
+        className="mt-3 rounded-xl bg-[var(--surface-subtle)] p-4"
+      >
         <input type="hidden" name="visitId" value={visit.visitId} />
         <fieldset>
           <legend className="text-sm font-medium text-stone-800">
@@ -115,7 +123,7 @@ export function RestaurantRatingForm({
             {[1, 2, 3, 4, 5].map((stars) => (
               <label
                 key={stars}
-                className="flex cursor-pointer items-center gap-1 rounded-lg border border-stone-300 bg-white px-3 py-2"
+                className="flex min-h-11 cursor-pointer items-center gap-1 rounded-lg border border-[#d8d1c5] bg-white px-3 py-2 has-checked:border-[var(--cognac)] has-checked:bg-[var(--cognac-soft)]"
               >
                 <input type="radio" name="stars" value={stars} required />
                 <span>
@@ -144,7 +152,7 @@ export function RestaurantRatingForm({
         <button
           type="submit"
           disabled={pending || Boolean(state.success)}
-          className="mt-3 rounded-lg bg-stone-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          className="ui-button-primary mt-3 disabled:opacity-60"
         >
           {pending ? "Submitting…" : "Confirm rating"}
         </button>
@@ -162,10 +170,13 @@ export function CustomerRatingForm({
   );
   return (
     <details className="mt-4">
-      <summary className="cursor-pointer font-semibold text-amber-700">
+      <summary className="cursor-pointer font-semibold text-[var(--cognac)]">
         Rate this customer
       </summary>
-      <form action={action} className="mt-3 rounded-xl bg-stone-50 p-4">
+      <form
+        action={action}
+        className="mt-3 rounded-xl bg-[var(--surface-subtle)] p-4"
+      >
         <input type="hidden" name="visitId" value={visit.visitId} />
         <fieldset>
           <legend className="text-sm font-medium text-stone-800">
@@ -175,7 +186,7 @@ export function CustomerRatingForm({
             {[1, 2, 3, 4, 5].map((stars) => (
               <label
                 key={stars}
-                className="flex cursor-pointer items-center gap-1 rounded-lg border border-stone-300 bg-white px-3 py-2"
+                className="flex min-h-11 cursor-pointer items-center gap-1 rounded-lg border border-[#d8d1c5] bg-white px-3 py-2 has-checked:border-[var(--cognac)] has-checked:bg-[var(--cognac-soft)]"
               >
                 <input type="radio" name="stars" value={stars} required />
                 <span>
@@ -205,7 +216,7 @@ export function CustomerRatingForm({
         <button
           type="submit"
           disabled={pending || Boolean(state.success)}
-          className="mt-3 rounded-lg bg-stone-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          className="ui-button-primary mt-3 disabled:opacity-60"
         >
           {pending ? "Submitting…" : "Confirm customer rating"}
         </button>

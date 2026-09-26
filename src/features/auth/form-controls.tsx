@@ -17,7 +17,7 @@ export function Field({
     <div>
       <label
         htmlFor={name}
-        className="block text-sm font-medium text-stone-800"
+        className="block text-sm font-semibold text-[var(--ink)]"
       >
         {label}
       </label>
@@ -29,7 +29,7 @@ export function Field({
         required
         aria-invalid={Boolean(error)}
         aria-describedby={error ? errorId : undefined}
-        className="mt-2 block w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 transition outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200 aria-invalid:border-red-600"
+        className="ui-field mt-2"
       />
       {error ? (
         <p id={errorId} className="mt-2 text-sm text-red-700">
@@ -53,7 +53,7 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-xl bg-stone-900 px-4 py-3 font-semibold text-white transition hover:bg-stone-700 focus:ring-2 focus:ring-stone-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+      className="ui-button-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? pendingLabel : idleLabel}
     </button>

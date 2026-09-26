@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { DarkHeader } from "@/components/dark-header";
 import { PublicAccountNavigation } from "@/features/auth/public-account-navigation";
 import { RestaurantDetails } from "@/features/restaurants/profile-components";
 import {
@@ -17,7 +18,10 @@ export default async function PublicRestaurantPage({
 }: Readonly<PublicRestaurantPageProps>) {
   const { restaurantId } = await params;
   if (!isRestaurantId(restaurantId)) notFound();
-  const accountNavigation = await PublicAccountNavigation({ compact: true });
+  const accountNavigation = await PublicAccountNavigation({
+    compact: true,
+    inverse: true,
+  });
 
   let restaurant;
   try {
@@ -25,10 +29,7 @@ export default async function PublicRestaurantPage({
   } catch {
     return (
       <ProfileShell accountNavigation={accountNavigation}>
-        <div
-          role="alert"
-          className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
-        >
+        <div role="alert" className="ui-status-error">
           <p>We couldn&apos;t load this restaurant.</p>
           <Link
             href={`/restaurants/${restaurantId}`}
@@ -45,11 +46,9 @@ export default async function PublicRestaurantPage({
 
   return (
     <ProfileShell accountNavigation={accountNavigation}>
-      <article className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
-        <p className="text-sm font-semibold text-amber-700">
-          Restaurant profile
-        </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+      <article className="ui-card overflow-hidden p-6 sm:p-12">
+        <p className="ui-eyebrow">Restaurant profile</p>
+        <h1 className="mt-4 text-5xl text-[var(--ink)] sm:text-6xl">
           {restaurant.name}
         </h1>
         <div className="mt-8">
@@ -68,18 +67,13 @@ function ProfileShell({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-10">
-      <div className="mx-auto max-w-3xl">
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href="/restaurants"
-            className="text-sm font-semibold text-amber-700"
-          >
-            ← Restaurant directory
-          </Link>
-          {accountNavigation}
-        </header>
-        <div className="mt-8">{children}</div>
+    <main className="min-h-screen">
+      <DarkHeader>{accountNavigation}</DarkHeader>
+      <div className="ui-container max-w-4xl py-8 sm:py-12">
+        <Link href="/restaurants" className="ui-button-quiet">
+          ← Restaurant directory
+        </Link>
+        <div className="mt-6">{children}</div>
       </div>
     </main>
   );

@@ -17,8 +17,9 @@ export function EmployeeManagement({
   const [state, formAction, pending] = useActionState(grantEmployeeAccess, {});
 
   return (
-    <section className="mt-10 rounded-2xl border border-stone-200 bg-white p-6">
-      <h2 className="text-xl font-semibold text-stone-900">Employees</h2>
+    <section className="ui-card mt-10 p-6 sm:p-8">
+      <p className="ui-eyebrow">Team access</p>
+      <h2 className="mt-3 text-3xl text-[var(--ink)]">Employees</h2>
       <p className="mt-2 text-stone-600">
         Employees must create their own account before you grant access.
       </p>
@@ -44,7 +45,7 @@ export function EmployeeManagement({
             aria-describedby={
               state.fieldError ? "employee-email-error" : undefined
             }
-            className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+            className="ui-field mt-2"
           />
           {state.fieldError ? (
             <p id="employee-email-error" className="mt-2 text-sm text-red-700">
@@ -55,18 +56,18 @@ export function EmployeeManagement({
         <button
           type="submit"
           disabled={pending}
-          className="self-start rounded-xl bg-stone-900 px-5 py-3 font-semibold text-white disabled:opacity-60 sm:mt-7"
+          className="ui-button-primary self-start disabled:opacity-60 sm:mt-7"
         >
           {pending ? "Adding…" : "Grant access"}
         </button>
       </form>
       {state.formError ? (
-        <p role="alert" className="mt-3 text-sm text-red-700">
+        <p role="alert" className="ui-status-error mt-3 text-sm">
           {state.formError}
         </p>
       ) : null}
       {state.success ? (
-        <p role="status" className="mt-3 text-sm text-green-700">
+        <p role="status" className="ui-status-success mt-3 text-sm">
           {state.success}
         </p>
       ) : null}

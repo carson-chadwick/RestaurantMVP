@@ -1,5 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("next/font/google", () => ({
+  Cormorant_Garamond: () => ({ variable: "font-serif" }),
+  Plus_Jakarta_Sans: () => ({ variable: "font-sans" }),
+}));
 
 import RootLayout from "./layout";
 

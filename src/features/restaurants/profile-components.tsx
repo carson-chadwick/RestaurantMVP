@@ -30,7 +30,9 @@ export function RatingSummaryDisplay({
           <span
             key={index}
             className={
-              index < filledStars ? "text-amber-500" : "text-stone-300"
+              index < filledStars
+                ? "text-[var(--cognac-bright)]"
+                : "text-[#d7d0c5]"
             }
           >
             {index < filledStars ? "★" : "☆"}
@@ -57,7 +59,7 @@ export function RestaurantDetails({
       {profile.phone ? (
         <p>
           <a
-            className="font-medium text-amber-700 hover:underline"
+            className="font-semibold text-[var(--cognac)] hover:underline"
             href={`tel:${profile.phone}`}
           >
             {profile.phone}
@@ -111,7 +113,7 @@ export function RestaurantProfileForm({
           defaultValue={profile.name}
           required
           aria-invalid={Boolean(state.fieldErrors?.restaurantName)}
-          className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+          className="ui-field mt-2"
         />
         {state.fieldErrors?.restaurantName?.[0] ? (
           <p className="mt-2 text-sm text-red-700">
@@ -133,7 +135,7 @@ export function RestaurantProfileForm({
           maxLength={300}
           rows={2}
           aria-invalid={Boolean(state.fieldErrors?.address)}
-          className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+          className="ui-field mt-2"
         />
         {state.fieldErrors?.address?.[0] ? (
           <p className="mt-2 text-sm text-red-700">
@@ -156,7 +158,7 @@ export function RestaurantProfileForm({
           maxLength={25}
           autoComplete="tel"
           aria-invalid={Boolean(state.fieldErrors?.phone)}
-          className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+          className="ui-field mt-2"
         />
         {state.fieldErrors?.phone?.[0] ? (
           <p className="mt-2 text-sm text-red-700">
@@ -178,7 +180,7 @@ export function RestaurantProfileForm({
           maxLength={500}
           rows={4}
           aria-invalid={Boolean(state.fieldErrors?.description)}
-          className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+          className="ui-field mt-2"
         />
         {state.fieldErrors?.description?.[0] ? (
           <p className="mt-2 text-sm text-red-700">
@@ -202,7 +204,7 @@ export function RestaurantProfileForm({
             return (
               <div
                 key={day}
-                className="grid items-end gap-3 rounded-xl border border-stone-200 p-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
+                className="grid items-end gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-subtle)]/55 p-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
               >
                 <p className="self-center font-medium text-stone-800">
                   {formatDay(day)}
@@ -214,7 +216,7 @@ export function RestaurantProfileForm({
                     name={`${day}Open`}
                     type="time"
                     defaultValue={closed ? "" : hours.open}
-                    className="mt-1 block w-full rounded-lg border border-stone-300 px-3 py-2"
+                    className="ui-field mt-1 min-h-10 py-2"
                   />
                 </label>
                 <label className="text-sm text-stone-700">
@@ -224,7 +226,7 @@ export function RestaurantProfileForm({
                     name={`${day}Close`}
                     type="time"
                     defaultValue={closed ? "" : hours.close}
-                    className="mt-1 block w-full rounded-lg border border-stone-300 px-3 py-2"
+                    className="ui-field mt-1 min-h-10 py-2"
                   />
                 </label>
                 <label className="flex items-center gap-2 pb-2 text-sm text-stone-700">
@@ -257,7 +259,7 @@ export function RestaurantProfileForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-xl bg-stone-900 px-5 py-3 font-semibold text-white disabled:opacity-60"
+        className="ui-button-primary disabled:opacity-60"
       >
         {pending ? "Saving…" : "Save restaurant"}
       </button>

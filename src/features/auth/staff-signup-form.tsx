@@ -19,10 +19,7 @@ export function StaffSignupForm({
   return (
     <form action={formAction} className="space-y-5" noValidate>
       {state.formError ? (
-        <p
-          role="alert"
-          className="rounded-xl bg-red-50 p-3 text-sm text-red-800"
-        >
+        <p role="alert" className="ui-status-error text-sm">
           {state.formError}
         </p>
       ) : null}
@@ -77,10 +74,18 @@ export function StaffSignupForm({
         pendingLabel="Creating account…"
       />
       <p className="text-center text-sm text-stone-600">
+        <Link
+          href="/signup"
+          className="font-semibold text-[var(--cognac)] hover:underline"
+        >
+          Choose another account type
+        </Link>
+      </p>
+      <p className="text-center text-sm text-stone-600">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-semibold text-amber-700 hover:text-amber-800"
+          className="font-semibold text-[var(--cognac)] hover:underline"
         >
           Sign in
         </Link>

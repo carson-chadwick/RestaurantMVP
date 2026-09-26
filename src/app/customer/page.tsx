@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { DarkHeader } from "@/components/dark-header";
 import { logout } from "@/features/auth/actions";
 import {
   CustomerRatingSummaryDisplay,
@@ -47,51 +48,33 @@ export default async function CustomerPage() {
   const ratedVisits = visits?.filter((visit) => visit.stars !== null) ?? [];
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-10">
-      <div className="mx-auto max-w-5xl">
-        <header className="flex flex-col gap-4 border-b border-stone-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href="/"
-            className="text-sm font-semibold tracking-[0.18em] text-amber-700 uppercase"
-          >
-            Dining Plus
+    <main className="min-h-screen">
+      <DarkHeader>
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
+          <Link href="/restaurants" className="ui-button-inverse">
+            Browse restaurants
           </Link>
-          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
-            <Link
-              href="/restaurants"
-              className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
-            >
-              Browse restaurants
-            </Link>
-            <Link
-              href="/customer/profile"
-              className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
-            >
-              Profile
-            </Link>
-            <form action={logout}>
-              <button
-                type="submit"
-                className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
-        </header>
+          <Link href="/customer/profile" className="ui-button-inverse">
+            Profile
+          </Link>
+          <form action={logout}>
+            <button type="submit" className="ui-button-inverse">
+              Sign out
+            </button>
+          </form>
+        </div>
+      </DarkHeader>
+      <div className="ui-container max-w-5xl">
         <section className="py-16">
-          <p className="text-sm font-semibold text-amber-700">Customer home</p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+          <p className="ui-eyebrow">Customer home</p>
+          <h1 className="mt-4 text-5xl text-[var(--ink)] sm:text-6xl">
             Welcome, {profile.first_name}.
           </h1>
           <p className="mt-5 text-lg text-stone-600">
             Signed in as {userData.user.email}
           </p>
           {visits === null || reputation === null ? (
-            <div
-              role="alert"
-              className="mt-10 rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
-            >
+            <div role="alert" className="ui-status-error mt-10">
               <p>We couldn&apos;t load your restaurant visits.</p>
               <Link
                 href="/customer"
@@ -102,7 +85,7 @@ export default async function CustomerPage() {
             </div>
           ) : (
             <>
-              <section className="mt-10 rounded-2xl border border-stone-200 bg-white p-6">
+              <section className="ui-card mt-10 p-6 sm:p-8">
                 <h2 className="text-2xl font-semibold text-stone-900">
                   Your customer rating
                 </h2>
@@ -120,10 +103,7 @@ export default async function CustomerPage() {
                 </h2>
                 <div className="mt-4 space-y-4">
                   {pendingVisits.map((visit) => (
-                    <article
-                      key={visit.visitId}
-                      className="rounded-2xl border border-stone-200 bg-white p-6"
-                    >
+                    <article key={visit.visitId} className="ui-card p-6">
                       <h3 className="text-lg font-semibold text-stone-900">
                         {visit.restaurantName}
                       </h3>
@@ -135,7 +115,7 @@ export default async function CustomerPage() {
                     </article>
                   ))}
                   {!pendingVisits.length ? (
-                    <p className="rounded-2xl border border-stone-200 bg-white p-6 text-stone-600">
+                    <p className="ui-status-empty">
                       You have no visits waiting for a rating.
                     </p>
                   ) : null}
@@ -149,7 +129,7 @@ export default async function CustomerPage() {
                   {ratedVisits.map((visit) => (
                     <article
                       key={visit.visitId}
-                      className="flex justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5"
+                      className="ui-card flex flex-col justify-between gap-4 p-5 sm:flex-row"
                     >
                       <div>
                         <h3 className="font-semibold text-stone-900">
@@ -159,7 +139,7 @@ export default async function CustomerPage() {
                           {new Date(visit.recordedAt).toLocaleString("en-US")}
                         </p>
                       </div>
-                      <p className="font-semibold text-amber-700">
+                      <p className="font-semibold text-[var(--cognac)]">
                         {visit.stars} {visit.stars === 1 ? "star" : "stars"}
                       </p>
                     </article>
@@ -177,7 +157,7 @@ export default async function CustomerPage() {
                   {reputation.history.map((rating) => (
                     <article
                       key={rating.visitId}
-                      className="flex justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5"
+                      className="ui-card flex flex-col justify-between gap-4 p-5 sm:flex-row"
                     >
                       <div>
                         <h3 className="font-semibold text-stone-900">
@@ -188,7 +168,7 @@ export default async function CustomerPage() {
                           {new Date(rating.recordedAt).toLocaleString("en-US")}
                         </p>
                       </div>
-                      <p className="font-semibold text-amber-700">
+                      <p className="font-semibold text-[var(--cognac)]">
                         {rating.stars} {rating.stars === 1 ? "star" : "stars"}
                       </p>
                     </article>

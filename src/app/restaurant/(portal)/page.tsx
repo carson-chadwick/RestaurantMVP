@@ -1,42 +1,28 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { DarkHeader } from "@/components/dark-header";
 import { logout } from "@/features/auth/actions";
 import { EmployeeManagement } from "@/features/restaurants/employee-management";
 import { createClient } from "@/lib/supabase/server";
 
 function PortalHeader() {
   return (
-    <header className="flex flex-col gap-4 border-b border-stone-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
-      <Link
-        href="/"
-        className="text-sm font-semibold tracking-[0.18em] text-amber-700 uppercase"
-      >
-        Dining Plus
-      </Link>
+    <DarkHeader>
       <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
-        <Link
-          href="/restaurant/visits"
-          className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
-        >
+        <Link href="/restaurant/visits" className="ui-button-inverse">
           Visits
         </Link>
-        <Link
-          href="/restaurant/profile"
-          className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
-        >
+        <Link href="/restaurant/profile" className="ui-button-inverse">
           Profile
         </Link>
         <form action={logout}>
-          <button
-            type="submit"
-            className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50"
-          >
+          <button type="submit" className="ui-button-inverse">
             Sign out
           </button>
         </form>
       </div>
-    </header>
+    </DarkHeader>
   );
 }
 
@@ -89,14 +75,12 @@ export default async function RestaurantPage() {
     }
 
     return (
-      <main className="min-h-screen px-6 py-10 sm:px-10">
-        <div className="mx-auto max-w-5xl">
-          <PortalHeader />
+      <main className="min-h-screen">
+        <PortalHeader />
+        <div className="ui-container max-w-5xl">
           <section className="py-14">
-            <p className="text-sm font-semibold text-amber-700">
-              Restaurant owner
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+            <p className="ui-eyebrow">Restaurant owner</p>
+            <h1 className="mt-4 text-5xl text-[var(--ink)] sm:text-6xl">
               {restaurant.name}
             </h1>
             <p className="mt-4 text-lg text-stone-600">
@@ -122,17 +106,15 @@ export default async function RestaurantPage() {
 
   if (!membership) {
     return (
-      <main className="min-h-screen px-6 py-10 sm:px-10">
-        <div className="mx-auto max-w-5xl">
-          <PortalHeader />
+      <main className="min-h-screen">
+        <PortalHeader />
+        <div className="ui-container max-w-5xl">
           <section className="py-16">
-            <p className="text-sm font-semibold text-amber-700">
-              Restaurant employee
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-stone-900">
+            <p className="ui-eyebrow">Restaurant employee</p>
+            <h1 className="mt-4 text-5xl text-[var(--ink)] sm:text-6xl">
               Your account is ready, {profile.first_name}.
             </h1>
-            <div className="mt-10 rounded-2xl border border-stone-200 bg-white p-6">
+            <div className="ui-card mt-10 p-6">
               <h2 className="text-lg font-semibold text-stone-900">
                 Waiting for restaurant access
               </h2>
@@ -159,20 +141,18 @@ export default async function RestaurantPage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-10">
-      <div className="mx-auto max-w-5xl">
-        <PortalHeader />
+    <main className="min-h-screen">
+      <PortalHeader />
+      <div className="ui-container max-w-5xl">
         <section className="py-16">
-          <p className="text-sm font-semibold text-amber-700">
-            Restaurant employee
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+          <p className="ui-eyebrow">Restaurant employee</p>
+          <h1 className="mt-4 text-5xl text-[var(--ink)] sm:text-6xl">
             {restaurant.name}
           </h1>
           <p className="mt-4 text-lg text-stone-600">
             Signed in as {profile.first_name} {profile.last_name}
           </p>
-          <div className="mt-10 rounded-2xl border border-stone-200 bg-white p-6">
+          <div className="ui-card mt-10 p-6">
             <h2 className="text-lg font-semibold text-stone-900">
               Employee access active
             </h2>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { DarkHeader } from "@/components/dark-header";
 import {
   CustomerRatingForm,
   CustomerRatingSummaryDisplay,
@@ -68,10 +69,7 @@ export default async function StaffVisitsPage({
   } catch {
     return (
       <VisitsShell>
-        <div
-          role="alert"
-          className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800"
-        >
+        <div role="alert" className="ui-status-error">
           <p>We couldn&apos;t load visit tools.</p>
           <Link
             href="/restaurant/visits"
@@ -93,9 +91,8 @@ export default async function StaffVisitsPage({
   return (
     <VisitsShell>
       <section>
-        <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
-          Record a paid visit
-        </h1>
+        <p className="ui-eyebrow">Guest directory</p>
+        <h1 className="mt-3 text-5xl text-[var(--ink)]">Record a paid visit</h1>
         <p className="mt-2 text-stone-600">
           Select a recent customer or search an exact first and last name.
         </p>
@@ -110,7 +107,7 @@ export default async function StaffVisitsPage({
               name="firstName"
               defaultValue={firstValue(parameters.firstName)}
               maxLength={50}
-              className="mt-1 block w-full rounded-xl border border-stone-300 px-4 py-3"
+              className="ui-field mt-1"
             />
           </label>
           <label className="text-sm font-medium text-stone-700">
@@ -119,13 +116,10 @@ export default async function StaffVisitsPage({
               name="lastName"
               defaultValue={firstValue(parameters.lastName)}
               maxLength={50}
-              className="mt-1 block w-full rounded-xl border border-stone-300 px-4 py-3"
+              className="ui-field mt-1"
             />
           </label>
-          <button
-            type="submit"
-            className="self-end rounded-xl bg-stone-900 px-5 py-3 font-semibold text-white"
-          >
+          <button type="submit" className="ui-button-primary self-end">
             Search
           </button>
         </form>
@@ -137,10 +131,7 @@ export default async function StaffVisitsPage({
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {workspace.customers.map((customer) => (
-            <article
-              key={customer.userId}
-              className="rounded-2xl border border-stone-200 bg-white p-5"
-            >
+            <article key={customer.userId} className="ui-card p-5">
               <h2 className="font-semibold text-stone-900">
                 {customer.firstName} {customer.lastName}
               </h2>
@@ -155,7 +146,7 @@ export default async function StaffVisitsPage({
           ))}
         </div>
         {!workspace.customers.length ? (
-          <p className="mt-6 rounded-2xl border border-stone-200 bg-white p-6 text-stone-600">
+          <p className="ui-status-empty mt-6">
             {firstName
               ? "No customers match that exact name."
               : "No customers are available."}
@@ -169,7 +160,7 @@ export default async function StaffVisitsPage({
             {hasPrevious ? (
               <Link
                 href={visitsHref(firstName, lastName, page - 1, ratingPage)}
-                className="font-semibold text-amber-700"
+                className="ui-button-quiet"
               >
                 Previous
               </Link>
@@ -179,7 +170,7 @@ export default async function StaffVisitsPage({
             {hasNext ? (
               <Link
                 href={visitsHref(firstName, lastName, page + 1, ratingPage)}
-                className="font-semibold text-amber-700"
+                className="ui-button-quiet"
               >
                 Next
               </Link>
@@ -197,10 +188,7 @@ export default async function StaffVisitsPage({
         </p>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           {workspace.ratingQueue.map((visit) => (
-            <article
-              key={visit.visitId}
-              className="rounded-2xl border border-stone-200 bg-white p-5"
-            >
+            <article key={visit.visitId} className="ui-card p-5">
               <h3 className="font-semibold text-stone-900">
                 {visit.firstName} {visit.lastName}
               </h3>
@@ -228,7 +216,7 @@ export default async function StaffVisitsPage({
             {hasPreviousRatingPage ? (
               <Link
                 href={visitsHref(firstName, lastName, page, ratingPage - 1)}
-                className="font-semibold text-amber-700"
+                className="ui-button-quiet"
               >
                 Previous ratings
               </Link>
@@ -238,7 +226,7 @@ export default async function StaffVisitsPage({
             {hasNextRatingPage ? (
               <Link
                 href={visitsHref(firstName, lastName, page, ratingPage + 1)}
-                className="font-semibold text-amber-700"
+                className="ui-button-quiet"
               >
                 Next ratings
               </Link>
@@ -253,7 +241,7 @@ export default async function StaffVisitsPage({
           {workspace.recentVisits.map((visit) => (
             <article
               key={visit.visitId}
-              className="flex flex-col justify-between gap-3 rounded-2xl border border-stone-200 bg-white p-5 sm:flex-row sm:items-center"
+              className="ui-card flex flex-col justify-between gap-3 p-5 sm:flex-row sm:items-center"
             >
               <div>
                 <p className="font-semibold text-stone-900">
@@ -286,15 +274,10 @@ export default async function StaffVisitsPage({
 
 function VisitsShell({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-10">
-      <div className="mx-auto max-w-5xl">
-        <Link
-          href="/restaurant"
-          className="text-sm font-semibold text-amber-700"
-        >
-          ← Restaurant portal
-        </Link>
-        <div className="mt-8">{children}</div>
+    <main className="min-h-screen">
+      <DarkHeader backHref="/restaurant" backLabel="Restaurant portal" />
+      <div className="ui-container max-w-5xl py-10 sm:py-14">
+        <div>{children}</div>
       </div>
     </main>
   );

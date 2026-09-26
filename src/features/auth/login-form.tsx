@@ -18,10 +18,7 @@ export function LoginForm({
   return (
     <form action={formAction} className="space-y-5" noValidate>
       {formError ? (
-        <p
-          role="alert"
-          className="rounded-xl bg-red-50 p-3 text-sm text-red-800"
-        >
+        <p role="alert" className="ui-status-error text-sm">
           {formError}
         </p>
       ) : null}
@@ -44,35 +41,15 @@ export function LoginForm({
         pending={pending}
         pendingLabel="Signing in…"
       />
-      <div className="space-y-2 text-center text-sm text-stone-600">
-        <p>
-          New customer?{" "}
-          <Link
-            href="/signup"
-            className="font-semibold text-amber-700 hover:text-amber-800"
-          >
-            Create a customer account
-          </Link>
-        </p>
-        <p>
-          Restaurant owner?{" "}
-          <Link
-            href="/restaurant/signup"
-            className="font-semibold text-amber-700 hover:text-amber-800"
-          >
-            Create a restaurant account
-          </Link>
-        </p>
-        <p>
-          Restaurant employee?{" "}
-          <Link
-            href="/employee/signup"
-            className="font-semibold text-amber-700 hover:text-amber-800"
-          >
-            Create an employee account
-          </Link>
-        </p>
-      </div>
+      <p className="text-center text-sm text-stone-600">
+        New to Dining+?{" "}
+        <Link
+          href="/signup"
+          className="font-semibold text-[var(--cognac)] hover:underline"
+        >
+          Create account
+        </Link>
+      </p>
     </form>
   );
 }

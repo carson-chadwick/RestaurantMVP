@@ -25,14 +25,8 @@ describe("customer auth forms", () => {
     );
     expect(screen.getByRole("button", { name: "Sign in" })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Create a customer account" }),
+      screen.getByRole("link", { name: "Create account" }),
     ).toHaveAttribute("href", "/signup");
-    expect(
-      screen.getByRole("link", { name: "Create a restaurant account" }),
-    ).toHaveAttribute("href", "/restaurant/signup");
-    expect(
-      screen.getByRole("link", { name: "Create an employee account" }),
-    ).toHaveAttribute("href", "/employee/signup");
   });
 
   it("renders all required signup fields and a login link", () => {
@@ -59,6 +53,9 @@ describe("customer auth forms", () => {
       "href",
       "/login",
     );
+    expect(
+      screen.getByRole("link", { name: "Choose another account type" }),
+    ).toHaveAttribute("href", "/signup");
   });
 
   it("collects a restaurant name only for owner signup", () => {
@@ -68,6 +65,9 @@ describe("customer auth forms", () => {
     expect(
       screen.getByRole("button", { name: "Create restaurant account" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Choose another account type" }),
+    ).toHaveAttribute("href", "/signup");
 
     unmount();
     render(<StaffSignupForm accountType="employee" />);

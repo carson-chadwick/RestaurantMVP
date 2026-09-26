@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { DarkHeader } from "@/components/dark-header";
 import { requireCustomer } from "@/features/auth/guards";
 import { PersonalProfileForm } from "@/features/profiles/profile-forms";
 
@@ -18,15 +18,12 @@ export default async function CustomerProfilePage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-10">
-      <div className="mx-auto max-w-2xl">
-        <Link href="/customer" className="text-sm font-semibold text-amber-700">
-          ← Customer home
-        </Link>
-        <section className="mt-8 rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
-            Customer profile
-          </h1>
+    <main className="min-h-screen">
+      <DarkHeader backHref="/customer" backLabel="Customer home" />
+      <div className="ui-container max-w-2xl py-10 sm:py-14">
+        <section className="ui-card p-6 sm:p-10">
+          <p className="ui-eyebrow">Account settings</p>
+          <h1 className="mt-3 text-4xl text-[var(--ink)]">Customer profile</h1>
           <p className="mt-2 text-stone-600">
             Manage your basic account information.
           </p>

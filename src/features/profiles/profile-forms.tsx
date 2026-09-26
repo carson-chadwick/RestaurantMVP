@@ -56,7 +56,7 @@ export function PersonalProfileForm({
             autoComplete="given-name"
             required
             aria-invalid={Boolean(state.fieldErrors?.firstName)}
-            className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+            className="ui-field mt-2"
           />
           {state.fieldErrors?.firstName?.[0] ? (
             <p className="mt-2 text-sm text-red-700">
@@ -78,7 +78,7 @@ export function PersonalProfileForm({
             autoComplete="family-name"
             required
             aria-invalid={Boolean(state.fieldErrors?.lastName)}
-            className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
+            className="ui-field mt-2"
           />
           {state.fieldErrors?.lastName?.[0] ? (
             <p className="mt-2 text-sm text-red-700">
@@ -98,7 +98,7 @@ export function PersonalProfileForm({
           id="email"
           value={email}
           readOnly
-          className="mt-2 block w-full rounded-xl border border-stone-200 bg-stone-100 px-4 py-3 text-stone-600"
+          className="ui-field mt-2 bg-[var(--surface-subtle)] text-[var(--ink-muted)]"
         />
         <p className="mt-2 text-sm text-stone-500">
           Email changes are not available yet.
@@ -108,7 +108,7 @@ export function PersonalProfileForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-xl bg-stone-900 px-5 py-3 font-semibold text-white disabled:opacity-60"
+        className="ui-button-primary disabled:opacity-60"
       >
         {pending ? "Saving…" : "Save personal profile"}
       </button>

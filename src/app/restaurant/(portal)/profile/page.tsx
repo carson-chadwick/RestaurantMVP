@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { DarkHeader } from "@/components/dark-header";
 import { requireRestaurantStaff } from "@/features/auth/guards";
 import { PersonalProfileForm } from "@/features/profiles/profile-forms";
 import {
@@ -74,19 +74,13 @@ export default async function RestaurantProfilePage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-10">
-      <div className="mx-auto max-w-2xl">
-        <Link
-          href="/restaurant"
-          className="text-sm font-semibold text-amber-700"
-        >
-          ← Restaurant portal
-        </Link>
-        <section className="mt-8 space-y-8">
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
-            <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
-              Staff profile
-            </h1>
+    <main className="min-h-screen">
+      <DarkHeader backHref="/restaurant" backLabel="Restaurant portal" />
+      <div className="ui-container max-w-2xl py-10 sm:py-14">
+        <section className="space-y-8">
+          <div className="ui-card p-6 sm:p-10">
+            <p className="ui-eyebrow">Account settings</p>
+            <h1 className="mt-3 text-4xl text-[var(--ink)]">Staff profile</h1>
             <p className="mt-2 text-stone-600">
               Manage your personal account information.
             </p>
@@ -101,7 +95,7 @@ export default async function RestaurantProfilePage() {
           </div>
 
           {role === "restaurant_owner" && restaurantProfile ? (
-            <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-10">
+            <div className="ui-card p-6 sm:p-10">
               <h2 className="text-2xl font-semibold text-stone-900">
                 Restaurant profile
               </h2>
@@ -113,7 +107,7 @@ export default async function RestaurantProfilePage() {
               </div>
             </div>
           ) : (
-            <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8">
+            <div className="ui-card p-6 sm:p-8">
               <h2 className="text-lg font-semibold text-stone-900">
                 {restaurantProfile?.name ?? "Waiting for restaurant access"}
               </h2>

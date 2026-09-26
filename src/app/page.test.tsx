@@ -6,8 +6,7 @@ vi.mock("@/features/auth/public-account-navigation", () => ({
   PublicAccountNavigation: vi.fn(async () => (
     <nav aria-label="Account navigation">
       <Link href="/restaurants">Browse restaurants</Link>
-      <Link href="/signup">Create customer account</Link>
-      <Link href="/restaurant/signup">Create restaurant account</Link>
+      <Link href="/signup">Create account</Link>
       <Link href="/login">Sign in</Link>
     </nav>
   )),
@@ -21,22 +20,27 @@ describe("Home", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: /better hospitality starts with trust/i,
+        name: /better guests\. better restaurants/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Dining Plus")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Create customer account" }),
+      screen.getByRole("link", { name: "Dining Plus home" }),
+    ).toHaveAttribute("href", "/");
+    expect(
+      screen.getByRole("heading", { name: /reputation goes both ways/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("link", { name: "Create account" }),
+    ).toHaveLength(2);
+    expect(
+      screen.getAllByRole("link", { name: "Create account" })[0],
     ).toHaveAttribute("href", "/signup");
-    expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: "Sign in" })[0]).toHaveAttribute(
       "href",
       "/login",
     );
     expect(
-      screen.getByRole("link", { name: "Create restaurant account" }),
-    ).toHaveAttribute("href", "/restaurant/signup");
-    expect(
-      screen.getByRole("link", { name: "Browse restaurants" }),
+      screen.getAllByRole("link", { name: "Browse restaurants" })[0],
     ).toHaveAttribute("href", "/restaurants");
   });
 });

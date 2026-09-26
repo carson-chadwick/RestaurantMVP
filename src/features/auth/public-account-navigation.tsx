@@ -7,23 +7,27 @@ import { getAccountDestination } from "./role";
 
 type PublicAccountNavigationProps = {
   includeBrowse?: boolean;
-  includeSignupActions?: boolean;
+  includeSignupAction?: boolean;
   compact?: boolean;
+  inverse?: boolean;
 };
 
 export async function PublicAccountNavigation({
   includeBrowse = false,
-  includeSignupActions = false,
+  includeSignupAction = false,
   compact = false,
+  inverse = false,
 }: Readonly<PublicAccountNavigationProps>) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
   const destination = data.user
     ? await getAccountDestination(supabase, data.user.id)
     : null;
-  const linkClass = compact
-    ? "rounded-lg px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100 hover:text-stone-900"
-    : "rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-stone-800 hover:bg-stone-50";
+  const linkClass = inverse
+    ? "ui-button-inverse backdrop-blur-sm"
+    : compact
+      ? "ui-button-quiet"
+      : "ui-button-secondary";
 
   return (
     <nav
@@ -33,28 +37,16 @@ export async function PublicAccountNavigation({
       {includeBrowse ? (
         <Link
           href="/restaurants"
-          className={
-            compact
-              ? linkClass
-              : "rounded-xl bg-amber-700 px-6 py-3 font-semibold text-white hover:bg-amber-800"
-          }
+          className={compact || inverse ? linkClass : "ui-button-primary"}
         >
           Browse restaurants
         </Link>
       ) : null}
 
-      {!data.user && includeSignupActions ? (
-        <>
-          <Link
-            href="/signup"
-            className="rounded-xl bg-stone-900 px-6 py-3 font-semibold text-white hover:bg-stone-700"
-          >
-            Create customer account
-          </Link>
-          <Link href="/restaurant/signup" className={linkClass}>
-            Create restaurant account
-          </Link>
-        </>
+      {!data.user && includeSignupAction ? (
+        <Link href="/signup" className="ui-button-primary">
+          Create account
+        </Link>
       ) : null}
 
       {!data.user ? (

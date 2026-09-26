@@ -16,11 +16,12 @@ export function RestaurantCard({
   restaurant,
 }: Readonly<{ restaurant: RestaurantProfile }>) {
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-stone-200 bg-white p-6">
-      <h2 className="text-xl font-semibold text-stone-900">
+    <article className="ui-card group flex h-full flex-col p-6 transition duration-200 hover:-translate-y-1 hover:border-[#d7c9b8] hover:shadow-[0_22px_55px_-36px_rgba(39,25,15,.5)]">
+      <p className="ui-eyebrow mb-3">Restaurant</p>
+      <h2 className="text-2xl text-[var(--ink)]">
         <Link
           href={`/restaurants/${restaurant.id}`}
-          className="hover:text-amber-700"
+          className="transition group-hover:text-[var(--cognac)]"
         >
           {restaurant.name}
         </Link>
@@ -57,7 +58,7 @@ export function RestaurantPagination({
       {hasPrevious ? (
         <Link
           href={directoryHref(search, page - 1)}
-          className="rounded-xl border border-stone-300 bg-white px-5 py-3 font-semibold text-stone-800 hover:bg-stone-50"
+          className="ui-button-secondary"
         >
           Previous
         </Link>
@@ -67,7 +68,7 @@ export function RestaurantPagination({
       {hasNext ? (
         <Link
           href={directoryHref(search, page + 1)}
-          className="rounded-xl border border-stone-300 bg-white px-5 py-3 font-semibold text-stone-800 hover:bg-stone-50"
+          className="ui-button-secondary"
         >
           Next
         </Link>
