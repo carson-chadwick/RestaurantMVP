@@ -35,7 +35,13 @@ export function RestaurantCard({
         </p>
       ) : null}
       <div className="mt-auto pt-6">
-        <RatingSummaryDisplay {...restaurant.ratingSummary} />
+        <Link
+          href={`/restaurants/${restaurant.id}`}
+          aria-label={`View ${restaurant.name} profile and reviews`}
+          className="block w-fit rounded-md transition hover:opacity-80"
+        >
+          <RatingSummaryDisplay {...restaurant.ratingSummary} />
+        </Link>
       </div>
     </article>
   );

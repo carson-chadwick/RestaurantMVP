@@ -23,6 +23,11 @@ describe("restaurant discovery components", () => {
       "href",
       `/restaurants/${restaurant.id}`,
     );
+    expect(
+      screen.getByRole("link", {
+        name: `View ${restaurant.name} profile and reviews`,
+      }),
+    ).toHaveAttribute("href", `/restaurants/${restaurant.id}`);
     expect(screen.getByText(restaurant.address!)).toBeInTheDocument();
     expect(
       screen.getByLabelText("No customer ratings yet"),
