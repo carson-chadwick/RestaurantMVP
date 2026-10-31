@@ -19,7 +19,7 @@ The MVP will include:
 * Restaurant accounts and login.
 * Restaurant employee portal.
 * Restaurant profiles.
-* Customer 1–5 star ratings of restaurants.
+* Customer 1–5 star ratings and optional written reviews of restaurants.
 * Employee 1–5 star ratings of customers.
 * Average restaurant rating.
 * Average customer rating.
@@ -31,7 +31,7 @@ The MVP will **not** include:
 * Payment processing.
 * POS/payment processor integrations.
 * Automatic transaction linking.
-* Written reviews or notes.
+* Restaurant responses or internal notes.
 * Public customer ratings/comments.
 * Advanced analytics.
 * Native mobile apps.
@@ -160,6 +160,23 @@ the resulting Vercel release passes the production smoke checklist.
 
 ---
 
+## Phase 7 — Customer Value Revision
+
+Apply initial user feedback before deployment.
+
+* [x] Lead the public landing page with the two-sided restaurant value proposition while explaining customer benefits.
+* [x] Make restaurant discovery the signed-in customer home.
+* [x] Add anonymous optional written restaurant reviews.
+* [x] Let customers edit and delete their restaurant reviews.
+* [x] Add derived customer points, badges, and pending-activity cues.
+* [x] Add visual star inputs, persistent customer points, and lightweight review celebration.
+* [x] Improve signup requirements, error clarity, and value retention.
+* [ ] Re-run release validation and deploy the revised MVP.
+
+**Complete when:** The revised customer flow passes local CI and the live Vercel smoke checklist.
+
+---
+
 # Post-MVP
 
 Consider only after testing the core product:
@@ -167,13 +184,13 @@ Consider only after testing the core product:
 * Transaction linking.
 * POS/payment integrations.
 * Verified dining interactions.
-* Written reviews.
 * Public customer names on restaurant reviews.
 * Internal restaurant notes.
 * Advanced employee management.
 * Analytics.
 * Search/filtering improvements.
-* Notifications.
+* Email and push notifications.
+* Redeemable or restaurant-funded rewards.
 * Customer rating opt-out controls.
 * Native mobile apps.
 
@@ -192,6 +209,6 @@ Consider only after testing the core product:
 
 ## Current Status
 
-**Phase:** 6 — MVP Polish
-**Status:** Phase 6 release candidate verified locally; production deployment pending
-**Next Goal:** Push the Phase 6 release candidate and complete the live Vercel smoke test.
+**Phase:** 7 — Customer Value Revision
+**Status:** Initial user-feedback revision implemented; release validation in progress
+**Next Goal:** Complete local CI, push the revised release candidate, and run the live Vercel smoke test.

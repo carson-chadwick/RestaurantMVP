@@ -1,81 +1,69 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { DarkHeader } from "@/components/dark-header";
-import { logout } from "@/features/auth/actions";
 import {
-  CustomerRatingSummaryDisplay,
-  RestaurantRatingForm,
-} from "@/features/visits/components";
+  RestaurantCard,
+  RestaurantPagination,
+} from "@/features/restaurants/discovery-components";
 import {
-  loadCustomerReputation,
-  loadCustomerVisits,
-} from "@/features/visits/data";
-import { createClient } from "@/lib/supabase/server";
+  listPublicRestaurants,
+  normalizeRestaurantPage,
+  normalizeRestaurantSearch,
+} from "@/features/restaurants/public-data";
 
-export default async function CustomerPage() {
-  const supabase = await createClient();
-  const { data: userData, error: userError } = await supabase.auth.getUser();
+type CustomerHomeProps = {
+  searchParams?: Promise<{
+    q?: string | string[];
+    page?: string | string[];
+  }>;
+};
 
-  if (userError || !userData.user) {
-    redirect("/login");
-  }
-
-  const { data: profile, error: profileError } = await supabase
-    .from("customer_profiles")
-    .select("first_name, last_name")
-    .eq("user_id", userData.user.id)
-    .single();
-
-  if (profileError || !profile) {
-    await supabase.auth.signOut();
-    redirect("/login?error=profile");
-  }
-
-  let visits;
-  let reputation;
-  try {
-    [visits, reputation] = await Promise.all([
-      loadCustomerVisits(),
-      loadCustomerReputation(),
-    ]);
-  } catch {
-    visits = null;
-    reputation = null;
-  }
-
-  const pendingVisits = visits?.filter((visit) => visit.stars === null) ?? [];
-  const ratedVisits = visits?.filter((visit) => visit.stars !== null) ?? [];
+export default async function CustomerPage({
+  searchParams = Promise.resolve({}),
+}: Readonly<CustomerHomeProps> = {}) {
+  const parameters = await searchParams;
+  const search = normalizeRestaurantSearch(parameters.q);
+  const page = normalizeRestaurantPage(parameters.page);
+  const directoryResult = await Promise.allSettled([
+    listPublicRestaurants(search, page),
+  ]).then(([result]) => result);
 
   return (
     <main className="min-h-screen">
-      <DarkHeader>
-        <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:justify-end">
-          <Link href="/restaurants" className="ui-button-inverse">
-            Browse restaurants
-          </Link>
-          <Link href="/customer/profile" className="ui-button-inverse">
-            Profile
-          </Link>
-          <form action={logout}>
-            <button type="submit" className="ui-button-inverse">
-              Sign out
-            </button>
-          </form>
-        </div>
-      </DarkHeader>
-      <div className="ui-container max-w-5xl">
-        <section className="py-16">
+      <div className="ui-container">
+        <section className="py-14 sm:py-20">
           <p className="ui-eyebrow">Customer home</p>
           <h1 className="mt-4 text-5xl text-[var(--ink)] sm:text-6xl">
-            Welcome, {profile.first_name}.
+            Find your next table.
           </h1>
-          <p className="mt-5 text-lg text-stone-600">
-            Signed in as {userData.user.email}
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--ink-soft)]">
+            Explore restaurants, compare ratings, and read experiences from
+            other customers.
           </p>
-          {visits === null || reputation === null ? (
-            <div role="alert" className="ui-status-error mt-10">
-              <p>We couldn&apos;t load your restaurant visits.</p>
+          <form
+            action="/customer"
+            method="get"
+            className="mt-8 flex flex-col gap-3 sm:flex-row"
+          >
+            <label htmlFor="restaurant-search" className="sr-only">
+              Search restaurants by name
+            </label>
+            <input
+              id="restaurant-search"
+              name="q"
+              type="search"
+              defaultValue={search}
+              maxLength={100}
+              placeholder="Search by restaurant name"
+              className="ui-field min-w-0 flex-1"
+            />
+            <button type="submit" className="ui-button-primary">
+              Search
+            </button>
+          </form>
+
+          {directoryResult.status === "rejected" ? (
+            <div role="alert" className="ui-status-error mt-8">
+              <p>We couldn&apos;t load restaurants.</p>
               <Link
                 href="/customer"
                 className="mt-3 inline-block font-semibold underline"
@@ -83,104 +71,32 @@ export default async function CustomerPage() {
                 Try again
               </Link>
             </div>
-          ) : (
+          ) : directoryResult.value.restaurants.length ? (
             <>
-              <section className="ui-card mt-10 p-6 sm:p-8">
-                <h2 className="text-2xl font-semibold text-stone-900">
-                  Your customer rating
-                </h2>
-                <p className="mt-2 text-stone-600">
-                  This reputation is private to you and authorized restaurant
-                  staff.
-                </p>
-                <div className="mt-4">
-                  <CustomerRatingSummaryDisplay {...reputation.summary} />
-                </div>
-              </section>
-              <section className="mt-10">
-                <h2 className="text-2xl font-semibold text-stone-900">
-                  Pending ratings
-                </h2>
-                <div className="mt-4 space-y-4">
-                  {pendingVisits.map((visit) => (
-                    <article key={visit.visitId} className="ui-card p-6">
-                      <h3 className="text-lg font-semibold text-stone-900">
-                        {visit.restaurantName}
-                      </h3>
-                      <p className="mt-1 text-sm text-stone-500">
-                        Visit recorded{" "}
-                        {new Date(visit.recordedAt).toLocaleString("en-US")}
-                      </p>
-                      <RestaurantRatingForm visit={visit} />
-                    </article>
-                  ))}
-                  {!pendingVisits.length ? (
-                    <p className="ui-status-empty">
-                      You have no visits waiting for a rating.
-                    </p>
-                  ) : null}
-                </div>
-              </section>
-              <section className="mt-12">
-                <h2 className="text-2xl font-semibold text-stone-900">
-                  Recent rated visits
-                </h2>
-                <div className="mt-4 space-y-3">
-                  {ratedVisits.map((visit) => (
-                    <article
-                      key={visit.visitId}
-                      className="ui-card flex flex-col justify-between gap-4 p-5 sm:flex-row"
-                    >
-                      <div>
-                        <h3 className="font-semibold text-stone-900">
-                          {visit.restaurantName}
-                        </h3>
-                        <p className="mt-1 text-sm text-stone-500">
-                          {new Date(visit.recordedAt).toLocaleString("en-US")}
-                        </p>
-                      </div>
-                      <p className="font-semibold text-[var(--cognac)]">
-                        {visit.stars} {visit.stars === 1 ? "star" : "stars"}
-                      </p>
-                    </article>
-                  ))}
-                  {!ratedVisits.length ? (
-                    <p className="text-stone-600">No rated visits yet.</p>
-                  ) : null}
-                </div>
-              </section>
-              <section className="mt-12">
-                <h2 className="text-2xl font-semibold text-stone-900">
-                  Ratings you received
-                </h2>
-                <div className="mt-4 space-y-3">
-                  {reputation.history.map((rating) => (
-                    <article
-                      key={rating.visitId}
-                      className="ui-card flex flex-col justify-between gap-4 p-5 sm:flex-row"
-                    >
-                      <div>
-                        <h3 className="font-semibold text-stone-900">
-                          {rating.restaurantName}
-                        </h3>
-                        <p className="mt-1 text-sm text-stone-500">
-                          Visit{" "}
-                          {new Date(rating.recordedAt).toLocaleString("en-US")}
-                        </p>
-                      </div>
-                      <p className="font-semibold text-[var(--cognac)]">
-                        {rating.stars} {rating.stars === 1 ? "star" : "stars"}
-                      </p>
-                    </article>
-                  ))}
-                  {!reputation.history.length ? (
-                    <p className="text-stone-600">
-                      You haven&apos;t received any customer ratings yet.
-                    </p>
-                  ) : null}
-                </div>
-              </section>
+              <p className="mt-6 text-sm text-stone-500">
+                {directoryResult.value.totalCount}{" "}
+                {directoryResult.value.totalCount === 1
+                  ? "restaurant"
+                  : "restaurants"}
+              </p>
+              <div className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {directoryResult.value.restaurants.map((restaurant) => (
+                  <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                ))}
+              </div>
+              <RestaurantPagination
+                page={page}
+                search={search}
+                totalCount={directoryResult.value.totalCount}
+                basePath="/customer"
+              />
             </>
+          ) : (
+            <div className="ui-status-empty mt-8">
+              {search
+                ? `No restaurants match “${search}”.`
+                : "No restaurants are available yet."}
+            </div>
           )}
         </section>
       </div>

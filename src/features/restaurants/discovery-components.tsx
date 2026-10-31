@@ -4,12 +4,12 @@ import type { RestaurantProfile } from "./profile";
 import { RatingSummaryDisplay } from "./profile-components";
 import { RESTAURANTS_PER_PAGE } from "./public-data";
 
-function directoryHref(search: string, page: number) {
+function directoryHref(search: string, page: number, basePath: string) {
   const params = new URLSearchParams();
   if (search) params.set("q", search);
   if (page > 1) params.set("page", String(page));
   const query = params.toString();
-  return query ? `/restaurants?${query}` : "/restaurants";
+  return query ? `${basePath}?${query}` : basePath;
 }
 
 export function RestaurantCard({
@@ -45,7 +45,13 @@ export function RestaurantPagination({
   page,
   search,
   totalCount,
-}: Readonly<{ page: number; search: string; totalCount: number }>) {
+  basePath = "/restaurants",
+}: Readonly<{
+  page: number;
+  search: string;
+  totalCount: number;
+  basePath?: string;
+}>) {
   const hasPrevious = page > 1;
   const hasNext = page * RESTAURANTS_PER_PAGE < totalCount;
   if (!hasPrevious && !hasNext) return null;
@@ -57,7 +63,7 @@ export function RestaurantPagination({
     >
       {hasPrevious ? (
         <Link
-          href={directoryHref(search, page - 1)}
+          href={directoryHref(search, page - 1, basePath)}
           className="ui-button-secondary"
         >
           Previous
@@ -67,7 +73,7 @@ export function RestaurantPagination({
       )}
       {hasNext ? (
         <Link
-          href={directoryHref(search, page + 1)}
+          href={directoryHref(search, page + 1, basePath)}
           className="ui-button-secondary"
         >
           Next

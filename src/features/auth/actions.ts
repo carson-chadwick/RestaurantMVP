@@ -18,6 +18,30 @@ function formValue(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
+function retainedSignupValues(formData: FormData) {
+  return {
+    firstName: formValue(formData, "firstName"),
+    lastName: formValue(formData, "lastName"),
+    restaurantName: formValue(formData, "restaurantName"),
+    email: formValue(formData, "email"),
+    privacyAcknowledged: formData.get("privacyAcknowledged") === "on",
+  };
+}
+
+function signupValidationError(
+  formData: FormData,
+  fieldErrors: NonNullable<AuthActionState["fieldErrors"]>,
+): AuthActionState {
+  const clearFields: NonNullable<AuthActionState["clearFields"]> = [];
+  if (fieldErrors.password) clearFields.push("password");
+  if (fieldErrors.confirmPassword) clearFields.push("confirmPassword");
+  return {
+    fieldErrors,
+    values: retainedSignupValues(formData),
+    clearFields,
+  };
+}
+
 export async function signup(
   _previousState: AuthActionState,
   formData: FormData,
@@ -32,7 +56,7 @@ export async function signup(
   });
 
   if (!result.success) {
-    return { fieldErrors: result.error.flatten().fieldErrors };
+    return signupValidationError(formData, result.error.flatten().fieldErrors);
   }
 
   const supabase = await createClient();
@@ -52,7 +76,8 @@ export async function signup(
   if (error) {
     return {
       formError:
-        "We couldn't create your account. Check your information or try signing in.",
+        "We couldn't create your account. No account was created by this attempt, so you can correct your information and retry with the same email, or sign in if you already have an account.",
+      values: retainedSignupValues(formData),
     };
   }
 
@@ -73,7 +98,7 @@ export async function restaurantSignup(
   });
 
   if (!result.success) {
-    return { fieldErrors: result.error.flatten().fieldErrors };
+    return signupValidationError(formData, result.error.flatten().fieldErrors);
   }
 
   const supabase = await createClient();
@@ -93,7 +118,8 @@ export async function restaurantSignup(
   if (error) {
     return {
       formError:
-        "We couldn't create your restaurant account. Check your information or try signing in.",
+        "We couldn't create your restaurant account. No account was created by this attempt, so you can correct your information and retry with the same email, or sign in if you already have an account.",
+      values: retainedSignupValues(formData),
     };
   }
 
@@ -113,7 +139,7 @@ export async function employeeSignup(
   });
 
   if (!result.success) {
-    return { fieldErrors: result.error.flatten().fieldErrors };
+    return signupValidationError(formData, result.error.flatten().fieldErrors);
   }
 
   const supabase = await createClient();
@@ -132,7 +158,8 @@ export async function employeeSignup(
   if (error) {
     return {
       formError:
-        "We couldn't create your employee account. Check your information or try signing in.",
+        "We couldn't create your employee account. No account was created by this attempt, so you can correct your information and retry with the same email, or sign in if you already have an account.",
+      values: retainedSignupValues(formData),
     };
   }
 

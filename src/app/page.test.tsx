@@ -31,7 +31,7 @@ describe("Home", () => {
     ).toBeInTheDocument();
     expect(
       screen.getAllByRole("link", { name: "Create account" }),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(
       screen.getAllByRole("link", { name: "Create account" })[0],
     ).toHaveAttribute("href", "/signup");
@@ -42,5 +42,12 @@ describe("Home", () => {
     expect(
       screen.getAllByRole("link", { name: "Browse restaurants" })[0],
     ).toHaveAttribute("href", "/restaurants");
+    expect(
+      screen.getAllByRole("link", { name: "Create a restaurant account" })[0],
+    ).toHaveAttribute("href", "/restaurant/signup");
+    expect(
+      screen.getByText(/restaurant teams privately rate eligible guests/i),
+    ).toBeInTheDocument();
+    expect(document.body).not.toHaveTextContent(/\brecord(?:ed|ing)?\b/i);
   });
 });

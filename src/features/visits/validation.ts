@@ -14,6 +14,10 @@ export const customerSearchSchema = z
 export const customerIdSchema = z.uuid();
 export const visitIdSchema = z.uuid();
 export const starsSchema = z.coerce.number().int().min(1).max(5);
+export const reviewTextSchema = z
+  .string()
+  .trim()
+  .max(1000, "Keep your review to 1,000 characters or fewer.");
 
 export function normalizeVisitPage(value: string | string[] | undefined) {
   const text = Array.isArray(value) ? value[0] : value;

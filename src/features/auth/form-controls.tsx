@@ -4,14 +4,25 @@ export function Field({
   type = "text",
   autoComplete,
   error,
+  defaultValue,
+  helpText,
+  inputRef,
+  value,
+  onChange,
 }: Readonly<{
   label: string;
   name: string;
   type?: "text" | "email" | "password";
   autoComplete: string;
   error?: string;
+  defaultValue?: string;
+  helpText?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+  value?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }>) {
   const errorId = `${name}-error`;
+  const helpId = `${name}-help`;
 
   return (
     <div>
@@ -27,10 +38,23 @@ export function Field({
         type={type}
         autoComplete={autoComplete}
         required
+        defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
+        ref={inputRef}
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? errorId : undefined}
+        aria-describedby={
+          [helpText ? helpId : null, error ? errorId : null]
+            .filter(Boolean)
+            .join(" ") || undefined
+        }
         className="ui-field mt-2"
       />
+      {helpText ? (
+        <p id={helpId} className="mt-2 text-sm text-stone-500">
+          {helpText}
+        </p>
+      ) : null}
       {error ? (
         <p id={errorId} className="mt-2 text-sm text-red-700">
           {error}

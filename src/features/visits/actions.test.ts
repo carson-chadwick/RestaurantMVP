@@ -15,9 +15,11 @@ vi.mock("@/features/auth/guards", () => ({
 }));
 
 import {
+  deleteRestaurantReview,
   recordPaidVisit,
   submitCustomerRating,
   submitRestaurantRating,
+  updateRestaurantReview,
 } from "./actions";
 
 function formData(values: Record<string, string>) {
@@ -65,9 +67,32 @@ describe("visit actions", () => {
     expect(rpc).toHaveBeenCalledWith("submit_restaurant_rating", {
       target_visit_id: visitId,
       rating_stars: 4,
+      rating_review_text: undefined,
     });
     expect(revalidatePath).toHaveBeenCalledWith(`/restaurants/${customerId}`);
     expect(state).toEqual({ success: "Rating submitted." });
+  });
+
+  it("updates and deletes only the authenticated customer's review", async () => {
+    rpc.mockResolvedValue({ data: customerId, error: null });
+    await expect(
+      updateRestaurantReview(
+        {},
+        formData({ visitId, stars: "5", reviewText: " Excellent. " }),
+      ),
+    ).resolves.toEqual({ success: "Review updated." });
+    expect(rpc).toHaveBeenCalledWith("update_restaurant_review", {
+      target_visit_id: visitId,
+      rating_stars: 5,
+      rating_review_text: "Excellent.",
+    });
+
+    await expect(
+      deleteRestaurantReview({}, formData({ visitId })),
+    ).resolves.toEqual({ success: "Review deleted." });
+    expect(rpc).toHaveBeenCalledWith("delete_restaurant_review", {
+      target_visit_id: visitId,
+    });
   });
 
   it("returns safe errors from trusted operations", async () => {

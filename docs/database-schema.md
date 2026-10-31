@@ -12,7 +12,7 @@ This is the Phase 0 logical schema. Implement it through version-controlled Supa
 | `restaurants` | `id` (PK), owner Auth user ID, required profile name, and optional address, phone, description, and structured weekly hours. |
 | `restaurant_employees` | Restaurant ID and employee Auth user ID (composite unique key). A row grants immediate active access; removing it revokes access while retaining the employee account. |
 | `paid_visits` | `id` (PK), restaurant ID, customer user ID, recording staff user ID, recorded time. Represents staff's manual assertion of an outside payment; it stores no payment credentials or transaction data. |
-| `restaurant_ratings` | Visit ID (unique), customer user ID, restaurant ID, integer stars, submission time. |
+| `restaurant_ratings` | Visit ID (unique), customer user ID, restaurant ID, integer stars, optional trimmed review text up to 1,000 characters, submission time, and update time. |
 | `customer_ratings` | Visit ID (unique), customer user ID, restaurant ID, rating staff user ID, integer stars, submission time. |
 
 ## Relationships
@@ -26,6 +26,7 @@ This is the Phase 0 logical schema. Implement it through version-controlled Supa
 ## Constraints and Business Rules
 
 * Stars are integers from 1 through 5. Unique visit IDs in each rating table permit at most one rating per side per paid visit; a customer and restaurant may have multiple distinct visits.
+* Restaurant review text is optional, trimmed, and at most 1,000 characters. Customers may update stars/text or delete their own restaurant rating through trusted functions. Existing star-only rows remain valid.
 * Customer signup requires identity-sharing and two-sided-rating acknowledgement. Existing customer rows are backfilled as acknowledged; the MVP has no later opt-out state.
 * A restaurant name is required. Address is one trimmed free-text value; phone and description are optional trimmed values. Weekly hours contain exactly Monday through Sunday, with each day either closed or one opening/closing interval. Closing must be later than opening, so split and overnight hours are not supported in the MVP.
 * Restaurant profiles have no draft or publication state. Optional details may be incomplete, and blank optional values are stored as null. Customer rating averages and counts are derived from ratings rather than editable profile fields.
@@ -35,5 +36,7 @@ This is the Phase 0 logical schema. Implement it through version-controlled Supa
 * A customer rating requires a restaurant rating for the same visit. Staff may rate only visits at their restaurant. No separate confirmation record is needed.
 * RLS and trusted server logic prevent public reads of customer ratings, visits, customer profiles, and Auth email addresses. A customer may read their own aggregate and individual received-rating history without staff identity. Authorized restaurant staff may read customer aggregates only through the visit workflow and cannot read individual customer-rating values.
 * Anonymous and authenticated visitors access restaurant listings through read-only database functions that expose only restaurant ID, public profile fields, and aggregate restaurant rating values. The underlying restaurant table remains protected, so owner IDs and timestamps are not public.
+* A separate paginated public review function exposes only stars, optional review text, and submission/update dates. Customer user IDs and paid-visit identifiers are not returned.
+* Customer contribution counts are derived from active restaurant-rating rows. Points and badges are application-level projections rather than stored balances.
 * Public restaurant name search is a case-insensitive literal substring match, sorted by normalized name and restaurant ID. Database functions cap result size and support offset pagination. Until restaurant ratings are implemented, the same public contract returns a null average and zero count.
 * Do not assume email confirmation, restaurant claim approval, booking records, payment transactions, or external integrations in this schema.

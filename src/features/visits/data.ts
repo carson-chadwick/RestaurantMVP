@@ -90,8 +90,17 @@ export async function loadCustomerVisits(): Promise<CustomerVisit[]> {
     restaurantName: row.restaurant_name,
     recordedAt: row.recorded_at,
     stars: row.stars,
+    reviewText: row.review_text,
     submittedAt: row.submitted_at,
+    updatedAt: row.updated_at,
   }));
+}
+
+export async function loadCustomerContributionCount(): Promise<number> {
+  const { supabase } = await requireCustomer();
+  const { data, error } = await supabase.rpc("get_customer_contribution_count");
+  if (error) throw new Error("customer_progress_unavailable");
+  return Number(data ?? 0);
 }
 
 export async function loadCustomerReputation(): Promise<{

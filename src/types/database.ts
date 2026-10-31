@@ -162,23 +162,29 @@ export type Database = {
       restaurant_ratings: {
         Row: {
           customer_user_id: string;
+          review_text: string | null;
           restaurant_id: string;
           stars: number;
           submitted_at: string;
+          updated_at: string;
           visit_id: string;
         };
         Insert: {
           customer_user_id: string;
+          review_text?: string | null;
           restaurant_id: string;
           stars: number;
           submitted_at?: string;
+          updated_at?: string;
           visit_id: string;
         };
         Update: {
           customer_user_id?: string;
+          review_text?: string | null;
           restaurant_id?: string;
           stars?: number;
           submitted_at?: string;
+          updated_at?: string;
           visit_id?: string;
         };
         Relationships: [
@@ -279,6 +285,7 @@ export type Database = {
           rating_count: number;
         }[];
       };
+      get_customer_contribution_count: { Args: never; Returns: number };
       get_public_restaurant: {
         Args: { target_restaurant_id: string };
         Returns: {
@@ -314,8 +321,10 @@ export type Database = {
           recorded_at: string;
           restaurant_id: string;
           restaurant_name: string;
+          review_text: string | null;
           stars: number;
           submitted_at: string;
+          updated_at: string;
           visit_id: string;
         }[];
       };
@@ -352,6 +361,20 @@ export type Database = {
           rating_count: number;
           total_count: number;
           weekly_hours: Json;
+        }[];
+      };
+      list_public_restaurant_reviews: {
+        Args: {
+          result_limit?: number;
+          result_offset?: number;
+          target_restaurant_id: string;
+        };
+        Returns: {
+          review_text: string | null;
+          stars: number;
+          submitted_at: string;
+          total_count: number;
+          updated_at: string;
         }[];
       };
       list_restaurant_employees: {
@@ -403,7 +426,23 @@ export type Database = {
         Returns: string;
       };
       submit_restaurant_rating: {
-        Args: { rating_stars: number; target_visit_id: string };
+        Args: {
+          rating_review_text?: string;
+          rating_stars: number;
+          target_visit_id: string;
+        };
+        Returns: string;
+      };
+      update_restaurant_review: {
+        Args: {
+          rating_review_text?: string;
+          rating_stars: number;
+          target_visit_id: string;
+        };
+        Returns: string;
+      };
+      delete_restaurant_review: {
+        Args: { target_visit_id: string };
         Returns: string;
       };
     };

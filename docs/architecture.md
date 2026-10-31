@@ -159,11 +159,13 @@ should be enforced in trusted server/database logic rather than only in the brow
 ### MVP visit and rating flow
 
 1. Authenticated restaurant staff browse recent acknowledged customers or search an exact first and last name, then record a paid visit in their restaurant. The protected workflow shows customer email addresses. The record represents payment made outside Dining Plus; no payment or booking integration is involved.
-2. The customer sees the pending visit on their next in-app visit and may submit one restaurant rating. It contributes immediately to the public restaurant average and count. There is no separate staff confirmation.
+2. The customer sees the pending visit in Activity and may submit stars with optional written review text. It contributes immediately to the public restaurant average, count, and anonymous review feed. There is no separate staff confirmation.
 3. Customer signup acknowledgement authorizes the protected identity-sharing and two-sided-rating workflow for the MVP.
 4. Authorized staff may rate the customer once for that visit only after the customer has rated the restaurant. Customer aggregates and counts are exposed only to the customer and authorized staff inside the visit workflow. Individual received ratings are visible only to that customer and omit the submitting staff identity.
 
 Server-side operations validate visit-to-restaurant/customer relationships, staff membership, signup acknowledgement, and 1–5 star values before writes. Customer browsing, exact-name search, and Auth email access are limited to authenticated staff with an active restaurant relationship. Database uniqueness and check constraints provide a second integrity boundary. Details of the entities and constraints are in `docs/database-schema.md`.
+
+The signed-in customer home composes the same public restaurant discovery data used by `/restaurants`; private review prompts, progress, and reputation live under `/customer/activity`. The shared customer layout loads pending-review and contribution counts so navigation and derived points remain visible throughout the customer portal. Public written reviews use a dedicated read-only database function that omits customer and visit identity. Review edits and deletion use customer-authorized trusted functions. Points and badges are derived from the active review count, so no reward ledger or additional service is required. Rating forms use an accessible visual star control backed by native radio inputs, and successful new customer reviews may trigger a reduced-motion-safe client-side celebration without changing rating persistence.
 
 ---
 

@@ -2,18 +2,20 @@ import { cleanup, render, screen } from "@testing-library/react";
 import Link from "next/link";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { getPublicRestaurant, notFound } = vi.hoisted(() => ({
-  getPublicRestaurant: vi.fn(),
-  notFound: vi.fn(() => {
-    throw new Error("not-found");
-  }),
-}));
+const { getPublicRestaurant, listPublicRestaurantReviews, notFound } =
+  vi.hoisted(() => ({
+    getPublicRestaurant: vi.fn(),
+    listPublicRestaurantReviews: vi.fn(),
+    notFound: vi.fn(() => {
+      throw new Error("not-found");
+    }),
+  }));
 
 vi.mock("next/navigation", () => ({ notFound }));
 vi.mock("@/features/restaurants/public-data", async (importOriginal) => {
   const original =
     await importOriginal<typeof import("@/features/restaurants/public-data")>();
-  return { ...original, getPublicRestaurant };
+  return { ...original, getPublicRestaurant, listPublicRestaurantReviews };
 });
 vi.mock("@/features/auth/public-account-navigation", () => ({
   PublicAccountNavigation: vi.fn(async () => (
@@ -40,7 +42,13 @@ const restaurant = {
 };
 
 describe("public restaurant profile", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    listPublicRestaurantReviews.mockResolvedValue({
+      reviews: [],
+      totalCount: 0,
+    });
+  });
   afterEach(cleanup);
 
   it("renders safe profile details and rating state", async () => {
@@ -57,6 +65,7 @@ describe("public restaurant profile", () => {
       screen.getByRole("link", { name: restaurant.phone }),
     ).toHaveAttribute("href", `tel:${restaurant.phone}`);
     expect(screen.getByText("No ratings yet")).toBeInTheDocument();
+    expect(screen.getByText("No customer reviews yet.")).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /restaurant directory/i }),
     ).toHaveAttribute("href", "/restaurants");

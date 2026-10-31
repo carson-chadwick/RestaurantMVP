@@ -40,6 +40,8 @@ describe("customer auth forms", () => {
       "new-password",
     );
     expect(screen.getByLabelText("Confirm password")).toBeRequired();
+    expect(screen.getByText(/at least 6 characters/i)).toBeInTheDocument();
+    expect(screen.getByText(/email is your sign-in ID/i)).toBeInTheDocument();
     expect(
       screen.getByLabelText(/authorized restaurant staff may use my name/i),
     ).toBeRequired();

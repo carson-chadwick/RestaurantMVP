@@ -63,4 +63,8 @@ export type AuthFieldErrors = Partial<
 export type AuthActionState = {
   fieldErrors?: AuthFieldErrors;
   formError?: string;
+  values?: Partial<
+    Record<"firstName" | "lastName" | "restaurantName" | "email", string>
+  > & { privacyAcknowledged?: boolean };
+  clearFields?: ("password" | "confirmPassword")[];
 };

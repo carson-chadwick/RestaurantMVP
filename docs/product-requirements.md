@@ -8,12 +8,14 @@ Dining Plus is a two-sided restaurant reputation web app. Customers give restaur
 
 1. A customer creates an account with their first name, last name, email, and password and must acknowledge that authorized restaurant staff may use their name and email to record visits and may rate them after an eligible restaurant rating. Email confirmation is not required for the MVP.
 2. Authorized restaurant staff browse recent customers or search an exact first and last name, then record a paid visit for their restaurant. The protected workflow shows full customer email addresses for identification. This is a staff assertion that payment happened outside Dining Plus, not a payment in the app.
-3. The customer sees the pending visit in the app and can submit one 1–5 star restaurant rating for it. The rating immediately contributes to the restaurant average and count. No staff confirmation is required.
+3. The customer sees the pending visit in the Activity area and can submit one 1–5 star restaurant rating with optional written review text. The rating immediately contributes to the restaurant average and count. No staff confirmation is required.
 4. The customer is eligible for a restaurant-to-customer rating after rating that restaurant for the visit, as acknowledged during signup.
 5. The customer can see their own average customer rating, rating count, and individual received ratings identified by restaurant and visit date. The submitting staff member's identity is not shown.
 6. A customer may update their own first and last name. Their account email is visible to them but cannot be changed in the MVP.
 7. Restaurant profiles include a name and may include a free-text address, phone number, short description, and one local-time opening interval per weekday. Public discovery and profile routes are implemented separately within Phase 3.
-8. Anyone may browse an alphabetical public restaurant directory, search restaurant names, and open a restaurant profile without signing in. Directory results use twelve-item pages with previous and next navigation.
+8. Anyone may browse an alphabetical public restaurant directory, search restaurant names, open a restaurant profile, and read paginated anonymous reviews without signing in. Directory results use twelve-item pages with previous and next navigation.
+9. A signed-in customer's home is restaurant discovery. Their Activity area contains pending reviews, restaurant review history, private received ratings, and contribution progress. The customer header consistently shows navigation, pending activity, and the customer's current point total.
+10. Each active restaurant review is worth 10 non-redeemable points. Badges are derived at 1, 5, 10, and 25 active reviews; deleting a review recalculates progress. Submitting a new restaurant review confirms the earned points with a lightweight, reduced-motion-safe celebration; edits do not award more points.
 
 ## Restaurant owner and employee flow
 
@@ -28,9 +30,12 @@ Dining Plus is a two-sided restaurant reputation web app. Customers give restaur
 ## Ratings and privacy rules
 
 * Each paid visit can have at most one customer-to-restaurant rating and one restaurant-to-customer rating. Separate paid visits can receive separate ratings.
+* Rating forms present five interactive stars backed by native 1–5 radio inputs so mouse, touch, keyboard, and assistive-technology users share the same validated rating scale.
 * Restaurant profile rating summaries expose an average and count derived from submitted customer ratings. Before ratings exist, the profile displays “No ratings yet” and a count of zero; these values are never owner-editable.
 * Restaurant directory cards and profiles display five accessible stars and the rating count. Numeric averages are not shown as separate visible text in the MVP. Until Phase 4 creates rating records, all restaurants use the zero-rating state.
 * Restaurant averages and counts use submitted customer-to-restaurant ratings and are visible on restaurant profiles. Customer names are not public on restaurant ratings.
+* Public restaurant reviews expose only stars, optional text, and submission/update dates. They never expose customer identity or paid-visit details.
+* Customers may edit or delete only their own restaurant reviews. Deletion updates public aggregates and progress. A customer rating already submitted by staff remains valid because eligibility existed at submission time.
 * Customer averages and counts use submitted restaurant-to-customer ratings. They are available only to the customer and authenticated, authorized restaurant staff. They are never public.
 * Customer browsing and exact-name search are available only to authenticated staff authorized for a restaurant. They expose first name, last name, and full email address so staff can identify customers and record a paid visit.
 * All actions and sensitive reads require server-side authorization. Self-service restaurant creation does not grant access to another restaurant's employees, visits, or ratings.
@@ -39,6 +44,6 @@ Dining Plus is a two-sided restaurant reputation web app. Customers give restaur
 
 ## MVP boundaries
 
-Bookings and payments take place outside Dining Plus. There is no booking system, payment collection, POS integration, automatic transaction matching, staff visit confirmation, written review, public customer reputation, employee invitation email, or other email/push notification in the MVP. The rating prompt appears in the app when the customer next opens it.
+Bookings and payments take place outside Dining Plus. There is no booking system, payment collection, POS integration, automatic transaction matching, staff visit confirmation, restaurant response, public customer reputation, employee invitation email, redeemable reward, or email/push notification in the MVP. The review prompt appears in the app when the customer next opens it.
 
 Restaurant cuisine, images, website links, holiday hours, split hours, overnight hours, time-zone management, customer rating opt-out controls, duplicate-visit detection, and rating edits are outside the MVP scope.

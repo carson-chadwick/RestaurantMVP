@@ -7,25 +7,38 @@ import { RestaurantDetails } from "@/features/restaurants/profile-components";
 import {
   getPublicRestaurant,
   isRestaurantId,
+  listPublicRestaurantReviews,
+  normalizeReviewPage,
 } from "@/features/restaurants/public-data";
+import {
+  PublicReviewList,
+  ReviewPagination,
+} from "@/features/restaurants/review-components";
 
 type PublicRestaurantPageProps = {
   params: Promise<{ restaurantId: string }>;
+  searchParams?: Promise<{ reviewPage?: string | string[] }>;
 };
 
 export default async function PublicRestaurantPage({
   params,
+  searchParams = Promise.resolve({}),
 }: Readonly<PublicRestaurantPageProps>) {
   const { restaurantId } = await params;
   if (!isRestaurantId(restaurantId)) notFound();
+  const reviewPage = normalizeReviewPage((await searchParams).reviewPage);
   const accountNavigation = await PublicAccountNavigation({
     compact: true,
     inverse: true,
   });
 
   let restaurant;
+  let reviewResult;
   try {
-    restaurant = await getPublicRestaurant(restaurantId);
+    [restaurant, reviewResult] = await Promise.all([
+      getPublicRestaurant(restaurantId),
+      listPublicRestaurantReviews(restaurantId, reviewPage),
+    ]);
   } catch {
     return (
       <ProfileShell accountNavigation={accountNavigation}>
@@ -54,6 +67,25 @@ export default async function PublicRestaurantPage({
         <div className="mt-8">
           <RestaurantDetails profile={restaurant} />
         </div>
+        <section
+          id="reviews"
+          className="mt-12 border-t border-[var(--line)] pt-10"
+        >
+          <p className="ui-eyebrow">Customer experiences</p>
+          <h2 className="mt-3 text-3xl text-[var(--ink)]">Reviews</h2>
+          <p className="mt-3 text-sm text-stone-500">
+            Reviews are tied to restaurant-added visits. Customer identities are
+            not shown publicly.
+          </p>
+          <div className="mt-6">
+            <PublicReviewList reviews={reviewResult.reviews} />
+            <ReviewPagination
+              restaurantId={restaurantId}
+              page={reviewPage}
+              totalCount={reviewResult.totalCount}
+            />
+          </div>
+        </section>
       </article>
     </ProfileShell>
   );

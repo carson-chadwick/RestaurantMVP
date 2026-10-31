@@ -1,28 +1,24 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const {
-  createClient,
-  loadCustomerReputation,
-  loadCustomerVisits,
-  redirect,
-  signOut,
-} = vi.hoisted(() => ({
-  createClient: vi.fn(),
-  loadCustomerReputation: vi.fn(),
-  loadCustomerVisits: vi.fn(),
-  redirect: vi.fn((path: string) => {
-    throw new Error(`redirect:${path}`);
+const { createClient, listPublicRestaurants, redirect, signOut } = vi.hoisted(
+  () => ({
+    createClient: vi.fn(),
+    listPublicRestaurants: vi.fn(),
+    redirect: vi.fn((path: string) => {
+      throw new Error(`redirect:${path}`);
+    }),
+    signOut: vi.fn(),
   }),
-  signOut: vi.fn(),
-}));
+);
 
 vi.mock("@/lib/supabase/server", () => ({ createClient }));
 vi.mock("next/navigation", () => ({ redirect }));
-vi.mock("@/features/visits/data", () => ({
-  loadCustomerReputation,
-  loadCustomerVisits,
-}));
+vi.mock("@/features/restaurants/public-data", async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import("@/features/restaurants/public-data")>();
+  return { ...original, listPublicRestaurants };
+});
 vi.mock("@/features/visits/actions", () => ({
   recordPaidVisit: vi.fn(),
   submitCustomerRating: vi.fn(),
@@ -60,110 +56,48 @@ function customerClient({
 describe("customer home", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    loadCustomerVisits.mockResolvedValue([]);
-    loadCustomerReputation.mockResolvedValue({
-      summary: { averageRating: null, ratingCount: 0 },
-      history: [],
+    listPublicRestaurants.mockResolvedValue({
+      restaurants: [
+        {
+          id: "123e4567-e89b-42d3-a456-426614174000",
+          name: "The Table",
+          address: null,
+          phone: null,
+          description: null,
+          weeklyHours: null,
+          ratingSummary: { averageRating: 4.5, ratingCount: 2 },
+        },
+      ],
+      totalCount: 1,
     });
   });
 
-  it("shows the customer's private aggregate and individual history", async () => {
+  it("shows restaurant discovery instead of private reputation details", async () => {
     createClient.mockResolvedValue(customerClient());
-    loadCustomerReputation.mockResolvedValue({
-      summary: { averageRating: 4.3, ratingCount: 7 },
-      history: [
-        {
-          visitId: "visit-id",
-          restaurantId: "restaurant-id",
-          restaurantName: "The Table",
-          recordedAt: "2026-09-29T12:00:00Z",
-          stars: 5,
-          submittedAt: "2026-09-30T12:00:00Z",
-        },
-      ],
-    });
 
     render(await CustomerPage());
-    expect(screen.getByText("Your customer rating")).toBeInTheDocument();
-    expect(screen.getByText("4.3 average")).toBeInTheDocument();
-    expect(screen.getByText("7 ratings")).toBeInTheDocument();
-    expect(screen.getByText("The Table")).toBeInTheDocument();
-    expect(screen.getByText("5 stars")).toBeInTheDocument();
-    expect(screen.queryByText(/staff member/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Find your next table." }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "The Table" })).toHaveAttribute(
+      "href",
+      "/restaurants/123e4567-e89b-42d3-a456-426614174000",
+    );
   });
   afterEach(cleanup);
 
-  it("shows pending rating prompts and recent rated visits", async () => {
-    createClient.mockResolvedValue(customerClient());
-    loadCustomerVisits.mockResolvedValue([
-      {
-        visitId: "pending-id",
-        restaurantId: "restaurant-id",
-        restaurantName: "Pending Table",
-        recordedAt: "2026-09-29T12:00:00Z",
-        stars: null,
-        submittedAt: null,
-      },
-      {
-        visitId: "rated-id",
-        restaurantId: "restaurant-id",
-        restaurantName: "Rated Table",
-        recordedAt: "2026-09-28T12:00:00Z",
-        stars: 4,
-        submittedAt: "2026-09-28T13:00:00Z",
-      },
-    ]);
-
-    render(await CustomerPage());
-
-    expect(screen.getByText("Pending Table")).toBeInTheDocument();
-    expect(screen.getByText("Rated Table")).toBeInTheDocument();
-    expect(screen.getAllByText("4 stars")).not.toHaveLength(0);
-  });
-
-  it("shows the authenticated customer's identity and sign-out control", async () => {
-    createClient.mockResolvedValue(customerClient());
-
-    render(await CustomerPage());
-
-    expect(
-      screen.getByRole("heading", { name: "Welcome, Ada." }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Signed in as ada@example.com"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Sign out" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Browse restaurants" }),
-    ).toHaveAttribute("href", "/restaurants");
-  });
-
-  it("redirects an unauthenticated visitor to login", async () => {
-    createClient.mockResolvedValue(customerClient({ user: null }));
-
-    await expect(CustomerPage()).rejects.toThrow("redirect:/login");
-  });
-
-  it("clears the session when the linked profile is missing", async () => {
-    createClient.mockResolvedValue(customerClient({ profile: null }));
-
-    await expect(CustomerPage()).rejects.toThrow(
-      "redirect:/login?error=profile",
-    );
-    expect(signOut).toHaveBeenCalledOnce();
-  });
-
-  it("offers a safe retry when private dashboard data cannot load", async () => {
-    createClient.mockResolvedValue(customerClient());
-    loadCustomerVisits.mockRejectedValue(new Error("private detail"));
-
+  it("shows a safe directory error", async () => {
+    listPublicRestaurants.mockRejectedValue(new Error("private detail"));
     render(await CustomerPage());
     expect(screen.getByRole("alert")).toHaveTextContent(/couldn't load/i);
-    expect(screen.getByRole("link", { name: "Try again" })).toHaveAttribute(
-      "href",
-      "/customer",
+  });
+
+  it("passes normalized customer search parameters to discovery", async () => {
+    render(
+      await CustomerPage({
+        searchParams: Promise.resolve({ q: " Table ", page: "2" }),
+      }),
     );
+    expect(listPublicRestaurants).toHaveBeenCalledWith("Table", 2);
   });
 });

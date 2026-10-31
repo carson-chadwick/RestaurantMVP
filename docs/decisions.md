@@ -11,6 +11,22 @@ For each significant decision, record:
 * **Alternatives considered**
 * **Consequences**, when relevant
 
+## 2026-10-30 — Two-sided positioning and visible customer engagement
+
+* **Decision:** Lead the public experience with Dining+'s two-sided restaurant reputation value, keep customer discovery and rewards as supporting benefits, present rating choices as accessible stars, show derived points throughout the customer portal, and celebrate newly submitted customer reviews.
+* **Context:** Follow-up feedback found that the customer-first landing copy made Dining+ resemble a conventional review directory, numbered radio choices did not feel like star ratings, and progress was too hidden to motivate participation.
+* **Rationale:** The mutual rating system is the product differentiator for restaurant businesses. Persistent points and lightweight feedback make the existing derived reward model visible without adding a ledger, redemption system, or notification service.
+* **Alternatives considered:** Keeping discovery as the public lead, showing points only on Activity, adding a third-party animation package, and celebrating staff ratings or review edits.
+* **Consequences:** Customer pages share portal navigation and progress presentation. Native radio inputs remain the accessible and validated form control beneath the star UI. Celebration applies only to new customer-to-restaurant reviews and respects reduced-motion preferences.
+
+## 2026-10-29 — Customer-first discovery, anonymous reviews, and derived progress
+
+* **Decision:** Make restaurant discovery the signed-in customer home; move private review and reputation work to Activity; add optional anonymous public review text; allow customers to edit or delete their own restaurant reviews; and derive 10 points per active review with badges at 1, 5, 10, and 25 reviews.
+* **Context:** Initial user feedback found the landing value proposition, customer motivation, review usefulness, customer home flow, and signup recovery unclear.
+* **Rationale:** Discovery and written experiences give customers value before they have a pending review. Derived non-redeemable progress adds recognition without a reward ledger, fulfillment, or fraud-heavy infrastructure.
+* **Alternatives considered:** Keeping the ratings dashboard as customer home, star-only reviews, immutable reviews, redeemable restaurant rewards, and external notifications.
+* **Consequences:** Public review functions expose no customer identity. Deleting a review recalculates public aggregates and progress, while any customer rating already submitted by staff remains as historical reputation. Email/push delivery, redeemable rewards, restaurant responses, and full moderation tooling remain deferred.
+
 ---
 
 ## 2026-09-30 — Private customer reputation and visit-based rating queue

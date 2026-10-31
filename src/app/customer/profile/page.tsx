@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { DarkHeader } from "@/components/dark-header";
 import { requireCustomer } from "@/features/auth/guards";
 import { PersonalProfileForm } from "@/features/profiles/profile-forms";
 
@@ -19,7 +18,6 @@ export default async function CustomerProfilePage() {
 
   return (
     <main className="min-h-screen">
-      <DarkHeader backHref="/customer" backLabel="Customer home" />
       <div className="ui-container max-w-2xl py-10 sm:py-14">
         <section className="ui-card p-6 sm:p-10">
           <p className="ui-eyebrow">Account settings</p>

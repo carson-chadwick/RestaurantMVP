@@ -2,9 +2,11 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./actions", () => ({
+  deleteRestaurantReview: vi.fn(),
   recordPaidVisit: vi.fn(),
   submitCustomerRating: vi.fn(),
   submitRestaurantRating: vi.fn(),
+  updateRestaurantReview: vi.fn(),
 }));
 
 import {
@@ -78,8 +80,8 @@ describe("visit controls", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders accessible immutable 1-to-5 rating controls", () => {
-    render(
+  it("renders accessible 1-to-5 rating and optional review controls", () => {
+    const { container } = render(
       <RestaurantRatingForm
         visit={{
           visitId: "visit-id",
@@ -87,16 +89,23 @@ describe("visit controls", () => {
           restaurantName: "The Table",
           recordedAt: "2026-09-29T12:00:00Z",
           stars: null,
+          reviewText: null,
           submittedAt: null,
+          updatedAt: null,
         }}
       />,
     );
     expect(screen.getAllByRole("radio")).toHaveLength(5);
-    expect(
-      screen.getByText(/cannot be edited or deleted/i),
-    ).toBeInTheDocument();
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(5);
+    expect(screen.getByLabelText(/written review/i)).toHaveAttribute(
+      "maxlength",
+      "1000",
+    );
     expect(
       screen.getByRole("button", { name: "Confirm rating" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/edit or delete this review later/i),
     ).toBeInTheDocument();
   });
 });

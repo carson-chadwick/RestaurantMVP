@@ -4,6 +4,10 @@ import { describe, expect, it, vi } from "vitest";
 const { requireCustomer } = vi.hoisted(() => ({ requireCustomer: vi.fn() }));
 
 vi.mock("@/features/auth/guards", () => ({ requireCustomer }));
+vi.mock("@/features/visits/data", () => ({
+  loadCustomerVisits: vi.fn().mockResolvedValue([]),
+}));
+vi.mock("@/features/auth/actions", () => ({ logout: vi.fn() }));
 vi.mock("@/features/profiles/actions", () => ({
   updateCustomerProfile: vi.fn(),
   updateRestaurantProfile: vi.fn(),

@@ -13,6 +13,7 @@ vi.mock("@/features/auth/guards", () => ({
 
 import {
   loadCustomerReputation,
+  loadCustomerContributionCount,
   loadCustomerVisits,
   loadStaffVisitWorkspace,
 } from "./data";
@@ -150,7 +151,9 @@ describe("visit data", () => {
           restaurant_name: "The Table",
           recorded_at: "2026-09-29T12:00:00Z",
           stars: null,
+          review_text: null,
           submitted_at: null,
+          updated_at: null,
         },
       ],
       error: null,
@@ -162,10 +165,18 @@ describe("visit data", () => {
         restaurantName: "The Table",
         recordedAt: "2026-09-29T12:00:00Z",
         stars: null,
+        reviewText: null,
         submittedAt: null,
+        updatedAt: null,
       },
     ]);
     expect(requireCustomer).toHaveBeenCalledOnce();
+  });
+
+  it("loads the active contribution count used for points", async () => {
+    rpc.mockResolvedValue({ data: 5, error: null });
+    await expect(loadCustomerContributionCount()).resolves.toBe(5);
+    expect(rpc).toHaveBeenCalledWith("get_customer_contribution_count");
   });
 
   it("uses safe errors", async () => {

@@ -195,6 +195,35 @@ select {
   padding: 1rem;
 }
 
+.review-confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.review-confetti-piece {
+  position: absolute;
+  top: -1rem;
+  width: 0.55rem;
+  height: 0.9rem;
+  border-radius: 0.15rem;
+  opacity: 0;
+  animation: review-confetti-fall 1.6s ease-out forwards;
+}
+
+@keyframes review-confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(2rem, 105vh, 0) rotate(620deg);
+  }
+}
+
 .ui-status-error {
   border: 1px solid #efc5c0;
   background: #fff4f2;

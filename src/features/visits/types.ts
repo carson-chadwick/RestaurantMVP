@@ -29,7 +29,9 @@ export type CustomerVisit = {
   restaurantName: string;
   recordedAt: string;
   stars: number | null;
+  reviewText: string | null;
   submittedAt: string | null;
+  updatedAt: string | null;
 };
 
 export type CustomerRatingSummary = {
@@ -48,6 +50,7 @@ export type CustomerRatingHistory = {
 
 export type VisitActionState = {
   fieldError?: string;
+  reviewTextError?: string;
   formError?: string;
   success?: string;
 };

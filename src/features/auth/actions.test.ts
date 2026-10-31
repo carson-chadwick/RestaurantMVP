@@ -104,9 +104,11 @@ describe("customer auth actions", () => {
       }),
     );
 
-    expect(state.formError).toBe(
-      "We couldn't create your account. Check your information or try signing in.",
-    );
+    expect(state.formError).toMatch(/no account was created/i);
+    expect(state.values).toMatchObject({
+      firstName: "Ada",
+      email: "ada@example.com",
+    });
     expect(state.formError).not.toContain("already registered");
   });
 

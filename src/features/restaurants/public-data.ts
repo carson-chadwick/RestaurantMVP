@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { RestaurantProfile, WeeklyHours } from "./profile";
 
 export const RESTAURANTS_PER_PAGE = 12;
+export const REVIEWS_PER_PAGE = 10;
 
 const restaurantIdSchema = z.uuid();
 
@@ -21,6 +22,18 @@ type PublicRestaurantRow = {
 
 export type RestaurantDirectoryResult = {
   restaurants: RestaurantProfile[];
+  totalCount: number;
+};
+
+export type PublicRestaurantReview = {
+  stars: number;
+  reviewText: string | null;
+  submittedAt: string;
+  updatedAt: string;
+};
+
+export type PublicRestaurantReviewResult = {
+  reviews: PublicRestaurantReview[];
   totalCount: number;
 };
 
@@ -52,6 +65,8 @@ export function normalizeRestaurantPage(value: string | string[] | undefined) {
   const page = Number(text);
   return Number.isSafeInteger(page) && page > 0 ? page : 1;
 }
+
+export const normalizeReviewPage = normalizeRestaurantPage;
 
 export function isRestaurantId(value: string) {
   return restaurantIdSchema.safeParse(value).success;
@@ -87,4 +102,28 @@ export async function getPublicRestaurant(
 
   if (error) throw new Error("restaurant_profile_unavailable");
   return data?.[0] ? toRestaurantProfile(data[0]) : null;
+}
+
+export async function listPublicRestaurantReviews(
+  restaurantId: string,
+  page: number,
+): Promise<PublicRestaurantReviewResult> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("list_public_restaurant_reviews", {
+    target_restaurant_id: restaurantId,
+    result_limit: REVIEWS_PER_PAGE,
+    result_offset: (page - 1) * REVIEWS_PER_PAGE,
+  });
+  if (error) throw new Error("restaurant_reviews_unavailable");
+
+  const rows = data ?? [];
+  return {
+    reviews: rows.map((row) => ({
+      stars: row.stars,
+      reviewText: row.review_text,
+      submittedAt: row.submitted_at,
+      updatedAt: row.updated_at,
+    })),
+    totalCount: rows[0]?.total_count ?? 0,
+  };
 }

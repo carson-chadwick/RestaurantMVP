@@ -11,6 +11,7 @@ import {
   getPublicRestaurant,
   isRestaurantId,
   listPublicRestaurants,
+  listPublicRestaurantReviews,
   normalizeRestaurantPage,
   normalizeRestaurantSearch,
 } from "./public-data";
@@ -78,6 +79,37 @@ describe("public restaurant data", () => {
 
     rpc.mockResolvedValueOnce({ data: [], error: null });
     await expect(getPublicRestaurant(row.id)).resolves.toBeNull();
+  });
+
+  it("loads only anonymous public review fields", async () => {
+    rpc.mockResolvedValue({
+      data: [
+        {
+          stars: 5,
+          review_text: "Excellent service.",
+          submitted_at: "2026-10-01T12:00:00Z",
+          updated_at: "2026-10-01T12:00:00Z",
+          total_count: 1,
+        },
+      ],
+      error: null,
+    });
+    await expect(listPublicRestaurantReviews(row.id, 1)).resolves.toEqual({
+      reviews: [
+        {
+          stars: 5,
+          reviewText: "Excellent service.",
+          submittedAt: "2026-10-01T12:00:00Z",
+          updatedAt: "2026-10-01T12:00:00Z",
+        },
+      ],
+      totalCount: 1,
+    });
+    expect(rpc).toHaveBeenCalledWith("list_public_restaurant_reviews", {
+      target_restaurant_id: row.id,
+      result_limit: 10,
+      result_offset: 0,
+    });
   });
 
   it("rejects malformed restaurant IDs", () => {
