@@ -63,6 +63,18 @@ This checks formatting, lint rules, TypeScript types, unit tests, the production
 build, and production dependency vulnerabilities. Individual checks are also
 available through the scripts in `package.json`.
 
+The Playwright end-to-end smoke test runs separately because it uses the linked
+Supabase project and a persistent demo account. Seed the demo data, then run the
+test against a local Next.js server (started automatically by Playwright):
+
+```bash
+npm run demo:seed
+npm run test:e2e
+```
+
+The test reads the ignored `DINING_PLUS_DEMO_PASSWORD` value from
+`.env.demo.local` and runs in Chromium. Never commit that file or its value.
+
 Use [`docs/release-checklist.md`](docs/release-checklist.md) for the final
 desktop, mobile, role, privacy, and production smoke pass.
 
